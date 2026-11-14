@@ -14,8 +14,8 @@ import java.util.Optional;
 
 public class CategoryDaoJdbc implements CategoryDao {
 
-    public static final String SELECT_ALL = "SELECT * FROM categories ORDER BY id";
-    public static final String SELECT_BY_ID = "SELECT * FROM categories WHERE id = ?";
+    private static final String SELECT_ALL = "SELECT * FROM categories ORDER BY id";
+    private static final String SELECT_BY_ID = "SELECT * FROM categories WHERE id = ?";
 
     @Override
     public List<Category> findAll() {

@@ -9,9 +9,9 @@ import java.util.Optional;
 
 public class UserDaoJdbc implements UserDao {
 
-    public static final String SELECT_BY_USERNAME = "SELECT * FROM users WHERE username = ?";
-    public static final String SELECT_BY_ID = "SELECT * FROM users WHERE id = ?";
-    public static final String INSERT = "INSERT INTO users (username, password_hash, salt, role) VALUES (?, ?, ?, ?) RETURNING id";
+    private static final String SELECT_BY_USERNAME = "SELECT * FROM users WHERE username = ?";
+    private static final String SELECT_BY_ID = "SELECT * FROM users WHERE id = ?";
+    private static final String INSERT = "INSERT INTO users (username, password_hash, salt, role) VALUES (?, ?, ?, ?) RETURNING id";
 
     @Override
     public Optional<User> findByUsername(String username) {

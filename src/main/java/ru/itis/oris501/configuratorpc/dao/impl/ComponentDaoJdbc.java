@@ -121,8 +121,7 @@ public class ComponentDaoJdbc implements ComponentDao {
                 rs.getString("image_path"),
                 rs.getString("socket"),
                 rs.getString("ram_type"),
-                powerWatts,
-                rs.getTimestamp("created_at").toLocalDateTime()
+                powerWatts
         );
     }
 }
