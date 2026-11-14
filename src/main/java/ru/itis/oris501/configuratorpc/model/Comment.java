@@ -9,19 +9,17 @@ public class Comment {
     private String text;
     private LocalDateTime createdAt;
 
-    public Comment(int id, int buildId, int userId, String text, LocalDateTime createdAt) {
+    public Comment(int id, int buildId, int userId, String text) {
         this.id = id;
         this.buildId = buildId;
         this.userId = userId;
         this.text = text;
-        this.createdAt = createdAt;
     }
 
-    public Comment(int buildId, int userId, String text, LocalDateTime createdAt) {
+    public Comment(int buildId, int userId, String text) {
         this.buildId = buildId;
         this.userId = userId;
         this.text = text;
-        this.createdAt = createdAt;
     }
 
     public void setId(int id) {

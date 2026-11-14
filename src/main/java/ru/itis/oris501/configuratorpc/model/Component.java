@@ -14,7 +14,7 @@ public class Component {
     private Integer powerWatts;
     private LocalDateTime createdAt;
 
-    public Component(int id, String name, int categoryId, BigDecimal price, String imagePath, String socket, String ramType, Integer powerWatts, LocalDateTime createdAt) {
+    public Component(int id, String name, int categoryId, BigDecimal price, String imagePath, String socket, String ramType, Integer powerWatts) {
         this.id = id;
         this.name = name;
         this.categoryId = categoryId;
@@ -23,10 +23,9 @@ public class Component {
         this.socket = socket;
         this.ramType = ramType;
         this.powerWatts = powerWatts;
-        this.createdAt = createdAt;
     }
 
-    public Component(String name, int categoryId, BigDecimal price, String imagePath, String socket, String ramType, Integer powerWatts, LocalDateTime createdAt) {
+    public Component(String name, int categoryId, BigDecimal price, String imagePath, String socket, String ramType, Integer powerWatts) {
         this.name = name;
         this.categoryId = categoryId;
         this.price = price;
@@ -34,7 +33,6 @@ public class Component {
         this.socket = socket;
         this.ramType = ramType;
         this.powerWatts = powerWatts;
-        this.createdAt = createdAt;
     }
 
     public void setName(String name) {

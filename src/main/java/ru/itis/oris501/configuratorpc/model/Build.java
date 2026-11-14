@@ -10,21 +10,19 @@ public class Build {
     private boolean isPublic;
     private LocalDateTime createdAt;
 
-    public Build(int id, int userId, String title, String description, boolean isPublic, LocalDateTime createdAt) {
+    public Build(int id, int userId, String title, String description, boolean isPublic) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.isPublic = isPublic;
-        this.createdAt = createdAt;
     }
 
-    public Build(int userId, String title, String description, boolean isPublic, LocalDateTime createdAt) {
+    public Build(int userId, String title, String description, boolean isPublic) {
         this.userId = userId;
         this.title = title;
         this.description = description;
         this.isPublic = isPublic;
-        this.createdAt = createdAt;
     }
 
     public void setId(int id) {
