@@ -4,35 +4,35 @@ import java.time.LocalDateTime;
 
 public class Build {
     private int id;
-    private int user_id;
+    private int userId;
     private String title;
     private String description;
-    private boolean is_public;
-    private LocalDateTime created_at;
+    private boolean isPublic;
+    private LocalDateTime createdAt;
 
-    public Build(int id, int user_id, String title, String description, boolean is_public, LocalDateTime created_at) {
+    public Build(int id, int userId, String title, String description, boolean isPublic, LocalDateTime createdAt) {
         this.id = id;
-        this.user_id = user_id;
+        this.userId = userId;
         this.title = title;
         this.description = description;
-        this.is_public = is_public;
-        this.created_at = created_at;
+        this.isPublic = isPublic;
+        this.createdAt = createdAt;
     }
 
-    public Build(int user_id, String title, String description, boolean is_public, LocalDateTime created_at) {
-        this.user_id = user_id;
+    public Build(int userId, String title, String description, boolean isPublic, LocalDateTime createdAt) {
+        this.userId = userId;
         this.title = title;
         this.description = description;
-        this.is_public = is_public;
-        this.created_at = created_at;
+        this.isPublic = isPublic;
+        this.createdAt = createdAt;
     }
 
     public void setId(int id) {
         this.id = id;
     }
 
-    public void setUser_id(int user_id) {
-        this.user_id = user_id;
+    public void setUserId(int userId) {
+        this.userId = userId;
     }
 
     public void setTitle(String title) {
@@ -43,24 +43,24 @@ public class Build {
         this.description = description;
     }
 
-    public boolean isIs_public() {
-        return is_public;
+    public boolean isPublic() {
+        return isPublic;
     }
 
-    public void setIs_public(boolean is_public) {
-        this.is_public = is_public;
+    public void setPublic(boolean aPublic) {
+        this.isPublic = aPublic;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public int getId() {
         return id;
     }
 
-    public int getUser_id() {
-        return user_id;
+    public int getUserId() {
+        return userId;
     }
 
     public String getTitle() {
@@ -71,11 +71,7 @@ public class Build {
         return description;
     }
 
-    public boolean is_public() {
-        return is_public;
-    }
-
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }

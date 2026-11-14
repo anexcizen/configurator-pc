@@ -6,67 +6,67 @@ import java.time.LocalDateTime;
 public class Component {
     private int id;
     private String name;
-    private int category_id;
+    private int categoryId;
     private BigDecimal price;
-    private String image_path;
+    private String imagePath;
     private String socket;
-    private String ram_type;
-    private Integer power_watts;
-    private LocalDateTime created_at;
+    private String ramType;
+    private Integer powerWatts;
+    private LocalDateTime createdAt;
 
-    public Component(int id, String name, int category_id, BigDecimal price, String image_path, String socket, String ram_type, Integer power_watts, LocalDateTime created_at) {
+    public Component(int id, String name, int categoryId, BigDecimal price, String imagePath, String socket, String ramType, Integer powerWatts, LocalDateTime createdAt) {
         this.id = id;
         this.name = name;
-        this.category_id = category_id;
+        this.categoryId = categoryId;
         this.price = price;
-        this.image_path = image_path;
+        this.imagePath = imagePath;
         this.socket = socket;
-        this.ram_type = ram_type;
-        this.power_watts = power_watts;
-        this.created_at = created_at;
+        this.ramType = ramType;
+        this.powerWatts = powerWatts;
+        this.createdAt = createdAt;
     }
 
-    public Component(String name, int category_id, BigDecimal price, String image_path, String socket, String ram_type, Integer power_watts, LocalDateTime created_at) {
+    public Component(String name, int categoryId, BigDecimal price, String imagePath, String socket, String ramType, Integer powerWatts, LocalDateTime createdAt) {
         this.name = name;
-        this.category_id = category_id;
+        this.categoryId = categoryId;
         this.price = price;
-        this.image_path = image_path;
+        this.imagePath = imagePath;
         this.socket = socket;
-        this.ram_type = ram_type;
-        this.power_watts = power_watts;
-        this.created_at = created_at;
+        this.ramType = ramType;
+        this.powerWatts = powerWatts;
+        this.createdAt = createdAt;
     }
 
     public void setName(String name) {
         this.name = name;
     }
 
-    public void setCategory_id(int category_id) {
-        this.category_id = category_id;
+    public void setCategoryId(int categoryId) {
+        this.categoryId = categoryId;
     }
 
     public void setPrice(BigDecimal price) {
         this.price = price;
     }
 
-    public void setImage_path(String image_path) {
-        this.image_path = image_path;
+    public void setImagePath(String imagePath) {
+        this.imagePath = imagePath;
     }
 
     public void setSocket(String socket) {
         this.socket = socket;
     }
 
-    public void setRam_type(String ram_type) {
-        this.ram_type = ram_type;
+    public void setRamType(String ramType) {
+        this.ramType = ramType;
     }
 
-    public void setPower_watts(Integer power_watts) {
-        this.power_watts = power_watts;
+    public void setPowerWatts(Integer powerWatts) {
+        this.powerWatts = powerWatts;
     }
 
-    public void setCreated_at(LocalDateTime created_at) {
-        this.created_at = created_at;
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 
     public int getId() {
@@ -81,31 +81,31 @@ public class Component {
         return name;
     }
 
-    public int getCategory_id() {
-        return category_id;
+    public int getCategoryId() {
+        return categoryId;
     }
 
     public BigDecimal getPrice() {
         return price;
     }
 
-    public String getImage_path() {
-        return image_path;
+    public String getImagePath() {
+        return imagePath;
     }
 
     public String getSocket() {
         return socket;
     }
 
-    public String getRam_type() {
-        return ram_type;
+    public String getRamType() {
+        return ramType;
     }
 
-    public Integer getPower_watts() {
-        return power_watts;
+    public Integer getPowerWatts() {
+        return powerWatts;
     }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
     }
 }
