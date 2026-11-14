@@ -1,40 +1,74 @@
 package ru.itis.oris501.configuratorpc.model;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class User {
-    private final int id;
-    private final String username;
-    private final String password_hash;
-    private final String role;
-    private final LocalDateTime created_at;
+    private int id;
+    private String username;
+    private String passwordHash;
+    private String role;
+    private String salt;
+    private LocalDateTime createdAt;
 
-    public User(int id, String username, String password_hash, String role, LocalDateTime created_at) {
+    public User() {}
+
+    public User(String username, String passwordHash, String role, String salt) {
+        this.username = username;
+        this.passwordHash = passwordHash;
+        this.role = role;
+        this.salt = salt;
+    }
+
+    public User(int id, String username, String passwordHash, String role, String salt, LocalDateTime createdAt) {
         this.id = id;
         this.username = username;
-        this.password_hash = password_hash;
+        this.passwordHash = passwordHash;
         this.role = role;
-        this.created_at = created_at;
+        this.salt = salt;
+        this.createdAt = createdAt;
     }
 
     public int getId() {
         return id;
     }
 
+    public void setId(int id) {
+        this.id = id;
+    }
+
     public String getUsername() {
         return username;
     }
 
-    public String getPassword_hash() {
-        return password_hash;
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getPasswordHash() {
+        return passwordHash;
+    }
+    public void setPasswordHash(String passwordHash) {
+        this.passwordHash = passwordHash;
     }
 
     public String getRole() {
         return role;
     }
+    public void setRole(String role) {
+        this.role = role;
+    }
 
-    public LocalDateTime getCreated_at() {
-        return created_at;
+    public String getSalt() {
+        return salt;
+    }
+    public void setSalt(String salt) {
+        this.salt = salt;
+    }
+
+    public LocalDateTime getCreatedAt() {
+        return createdAt;
+    }
+    public void setCreatedAt(LocalDateTime createdAt) {
+        this.createdAt = createdAt;
     }
 }
