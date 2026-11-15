@@ -60,8 +60,7 @@ public class ComponentEditServlet extends HttpServlet {
             int categoryId = Integer.parseInt(categoryIdStr);
             BigDecimal price = new BigDecimal(priceStr);
             Integer powerWatts = (powerWattsStr == null || powerWattsStr.isBlank())
-                    ? null
-                    : Integer.parseInt(powerWattsStr);
+                    ? null : Integer.parseInt(powerWattsStr);
             component = new Component(name, categoryId, price, null, socket, ramType, powerWatts);
         } catch (NumberFormatException e) {
             req.setAttribute("error", "Некорректный формат числа");
