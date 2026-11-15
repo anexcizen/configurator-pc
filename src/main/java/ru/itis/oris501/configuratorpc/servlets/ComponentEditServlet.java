@@ -12,34 +12,32 @@ import ru.itis.oris501.configuratorpc.service.ComponentService;
 
 import java.io.IOException;
 import java.math.BigDecimal;
-import java.util.Optional;
 
 @WebServlet("/components/edit")
 public class ComponentEditServlet extends HttpServlet {
+
     private ComponentService componentService;
     private CategoryService categoryService;
 
     @Override
     public void init() throws ServletException {
-        ServletContext context = getServletContext();
-        componentService = (ComponentService) context.getAttribute("componentService");
-        categoryService = (CategoryService) context.getAttribute("categoryService");
+        ServletContext ctx = getServletContext();
+        componentService = (ComponentService) ctx.getAttribute("componentService");
+        categoryService = (CategoryService) ctx.getAttribute("categoryService");
     }
 
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
         String idStr = req.getParameter("id");
         if (idStr != null && !idStr.isBlank()) {
             try {
                 int id = Integer.parseInt(idStr);
-                Optional<Component> component = componentService.findById(id);
-                if (!component.isEmpty()) {
-                    req.setAttribute("component", component.get());
-                } else {
-                    resp.sendRedirect(req.getContextPath() + "/components");
-                }
+                componentService.findById(id)
+                        .ifPresent(c -> req.setAttribute("component", c));
             } catch (NumberFormatException e) {
                 resp.sendRedirect(req.getContextPath() + "/components");
+                return;
             }
         }
         req.setAttribute("categories", categoryService.findAll());
@@ -47,27 +45,32 @@ public class ComponentEditServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        Component component = null;
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
+            throws ServletException, IOException {
+        String idStr = req.getParameter("id");
+        String name = req.getParameter("name");
+        String categoryIdStr = req.getParameter("categoryId");
+        String priceStr = req.getParameter("price");
+        String socket = req.getParameter("socket");
+        String ramType = req.getParameter("ramType");
+        String powerWattsStr = req.getParameter("powerWatts");
+
+        Component component;
         try {
-            String idStr = req.getParameter("id");
-            String name = req.getParameter("name");
-            String categoryIdStr= req.getParameter("categoryId");
-            String priceStr = req.getParameter("price");
-            String socket = req.getParameter("socket");
-            String ramType = req.getParameter("ramType");
-            String powerWattsStr = req.getParameter("powerWatts");
-            try {
-                BigDecimal price = new BigDecimal(priceStr);
-                int categoryId = Integer.parseInt(categoryIdStr);
-                Integer powerWatts = (powerWattsStr != null && !powerWattsStr.isBlank())
-                        ? Integer.parseInt(powerWattsStr) : null;
-                component = new Component(name, categoryId, price, null, socket, ramType, powerWatts);
-            } catch (NumberFormatException e) {
-                req.setAttribute("error", e.getMessage());
-                req.getRequestDispatcher("/WEB-INF/views/component-edit.jsp").forward(req, resp);
-                return;
-            }
+            int categoryId = Integer.parseInt(categoryIdStr);
+            BigDecimal price = new BigDecimal(priceStr);
+            Integer powerWatts = (powerWattsStr == null || powerWattsStr.isBlank())
+                    ? null
+                    : Integer.parseInt(powerWattsStr);
+            component = new Component(name, categoryId, price, null, socket, ramType, powerWatts);
+        } catch (NumberFormatException e) {
+            req.setAttribute("error", "Некорректный формат числа");
+            req.setAttribute("categories", categoryService.findAll());
+            req.getRequestDispatcher("/WEB-INF/views/component-edit.jsp").forward(req, resp);
+            return;
+        }
+
+        try {
             if (idStr == null || idStr.isBlank()) {
                 componentService.create(component);
             } else {
@@ -77,11 +80,9 @@ public class ComponentEditServlet extends HttpServlet {
             resp.sendRedirect(req.getContextPath() + "/components");
         } catch (IllegalArgumentException e) {
             req.setAttribute("error", e.getMessage());
+            req.setAttribute("component", component);
+            req.setAttribute("categories", categoryService.findAll());
             req.getRequestDispatcher("/WEB-INF/views/component-edit.jsp").forward(req, resp);
         }
-
-        req.setAttribute("component", component);
-        req.setAttribute("categories", categoryService.findAll());
-        req.getRequestDispatcher("/WEB-INF/views/component-edit.jsp").forward(req, resp);
     }
 }
