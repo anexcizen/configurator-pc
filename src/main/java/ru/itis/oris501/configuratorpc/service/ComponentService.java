@@ -1,0 +1,90 @@
+package ru.itis.oris501.configuratorpc.service;
+
+import ru.itis.oris501.configuratorpc.dao.CategoryDao;
+import ru.itis.oris501.configuratorpc.dao.ComponentDao;
+import ru.itis.oris501.configuratorpc.dao.impl.CategoryDaoJdbc;
+import ru.itis.oris501.configuratorpc.dao.impl.ComponentDaoJdbc;
+import ru.itis.oris501.configuratorpc.model.Component;
+
+import java.math.BigDecimal;
+import java.util.List;
+import java.util.Optional;
+
+public class ComponentService {
+    private final ComponentDao componentDao;
+    private final CategoryDao categoryDao;
+
+    public ComponentService() {
+        this(new ComponentDaoJdbc(), new CategoryDaoJdbc());
+    }
+
+    public ComponentService(ComponentDao componentDao, CategoryDao categoryDao) {
+        this.componentDao = componentDao;
+        this.categoryDao = categoryDao;
+    }
+
+    public List<Component> findAll() {
+        return componentDao.findAll();
+    }
+
+    public List<Component> findByCategory(int categoryId) {
+        if (categoryId <= 0) {
+            throw new IllegalArgumentException("id категории должен быть > 0");
+        }
+        return componentDao.findByCategory(categoryId);
+    }
+
+    public Optional<Component> findById(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("id должен быть > 0");
+        }
+        return componentDao.findById(id);
+    }
+
+    public  Component create(Component c) {
+        validate(c);
+        return componentDao.save(c);
+    }
+
+    public void update(Component c) {
+        if (c.getId() <= 0) {
+            throw new IllegalArgumentException("id компонента некорректный");
+        }
+        if (componentDao.findById(c.getId()).isEmpty()) {
+            throw new IllegalArgumentException("компонента с таким id не существует");
+        }
+        validate(c);
+
+        componentDao.update(c);
+    }
+
+    public void delete(int id) {
+        if (id <= 0) {
+            throw new IllegalArgumentException("id должен быть > 0");
+        }
+
+        if (componentDao.findById(id).isEmpty()) {
+            throw new IllegalArgumentException("компонента с таким id не существует");
+        }
+
+        componentDao.delete(id);
+    }
+
+    private void validate(Component c) {
+        if (c == null) {
+            throw new IllegalArgumentException("компонент не может быть null");
+        }
+        if (c.getName() == null || c.getName().isBlank()) {
+            throw new IllegalArgumentException("название компонента не может быть пустым");
+        }
+        if (c.getPrice() == null || c.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
+            throw new IllegalArgumentException("цена должна быть строго > 0");
+        }
+        if (categoryDao.findById(c.getCategoryId()).isEmpty()) {
+            throw new IllegalArgumentException("категории с таким id не существует");
+        }
+        if (c.getPowerWatts() != null && c.getPowerWatts() <= 0) {
+            throw new IllegalArgumentException("мощность > 0");
+        }
+    }
+}
