@@ -67,7 +67,15 @@ public class ComponentService {
             throw new IllegalArgumentException("компонента с таким id не существует");
         }
 
-        componentDao.delete(id);
+        try {
+            componentDao.delete(id);
+        } catch (RuntimeException e) {
+            if (e.getCause() instanceof java.sql.SQLException
+                    && e.getCause().getMessage().contains("foreign key")) {
+                throw new IllegalArgumentException("Компонент используется в сборках, удалить нельзя. Сначала уберите его из сборок.");
+            }
+            throw e;
+        }
     }
 
     private void validate(Component c) {

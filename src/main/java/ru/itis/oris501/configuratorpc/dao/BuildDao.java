@@ -12,4 +12,8 @@ public interface BuildDao {
     List<Build> findByUserId(int userId);
     void addComponent(int buildId, int componentId);
     List<Component> findComponentsByBuildId(int buildId);
+    void delete(int id);
+    void removeComponent(int buildId, int componentId);
+    void update(Build build);
+    List<Build> findPublicBuilds();
 }

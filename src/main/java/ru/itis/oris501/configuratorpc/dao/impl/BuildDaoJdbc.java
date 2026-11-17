@@ -20,15 +20,19 @@ public class BuildDaoJdbc implements BuildDao {
     private static final String BUILDS_WHERE_USER_ID = "SELECT * FROM builds WHERE user_id = ?";
     private static final String INSERT_COMPONENT = "INSERT INTO build_components (build_id, component_id) VALUES (?, ?)";
     private static final String COMPONENT_WHERE_BC_BUILD_ID = "SELECT c.* FROM components c JOIN build_components bc ON c.id = bc.component_id WHERE bc.build_id = ?";
+    private static final String DELETE = "DELETE FROM builds WHERE id = ?";
+    private static final String DELETE_COMPONENT = "DELETE FROM build_components WHERE build_id = ? AND component_id = ?";
+    private static final String UPDATE = "UPDATE builds SET title=?, description=?, is_public=? WHERE id=?";
+    private static final String ALL_PUBLIC_BUILDS = "SELECT * FROM builds WHERE is_public = true ORDER BY id DESC";
 
     @Override
     public Build save(Build build) {
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(INSERT)){
+             PreparedStatement ps = conn.prepareStatement(INSERT)) {
             ps.setInt(1, build.getUserId());
             ps.setString(2, build.getTitle());
             ps.setString(3, build.getDescription());
-            ps.setBoolean(4, build.isPublic());
+            ps.setBoolean(4, build.isPub());
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) build.setId(rs.getInt("id"));
             }
@@ -41,7 +45,7 @@ public class BuildDaoJdbc implements BuildDao {
     @Override
     public Optional<Build> findById(int id) {
         try (Connection conn = DBConnection.getConnection();
-             PreparedStatement ps = conn.prepareStatement(BUILDS_WHERE_ID)){
+             PreparedStatement ps = conn.prepareStatement(BUILDS_WHERE_ID)) {
             ps.setInt(1, id);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
@@ -104,27 +108,79 @@ public class BuildDaoJdbc implements BuildDao {
         return components;
     }
 
-    private static Build mapToBuild(ResultSet rs) throws SQLException {
-        return new Build(
-                rs.getInt("id"),
-                rs.getInt("user_id"),
-                rs.getString("title"),
-                rs.getString("description"),
-                rs.getBoolean("is_public"));
+    @Override
+    public void delete(int id) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE)) {
+            ps.setInt(1, id);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Не удалось удалить сборку с id=" + id, e);
+        }
     }
 
-    private Component mapToComponent(ResultSet rs) throws SQLException {
-        int pw = rs.getInt("power_watts");
-        Integer powerWatts = rs.wasNull() ? null : pw;
-        return new Component(
-                rs.getInt("id"),
-                rs.getString("name"),
-                rs.getInt("category_id"),
-                rs.getBigDecimal("price"),
-                rs.getString("image_path"),
-                rs.getString("socket"),
-                rs.getString("ram_type"),
-                powerWatts
-        );
+    @Override
+    public void removeComponent(int buildId, int componentId) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(DELETE_COMPONENT)) {
+            ps.setInt(1, buildId);
+            ps.setInt(2, componentId);
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Не удалось удалить компонент из сборки", e);
+        }
     }
-}
+
+    @Override
+    public void update(Build build) {
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(UPDATE)) {
+            ps.setString(1, build.getTitle());
+            ps.setString(2, build.getDescription());
+            ps.setBoolean(3, build.isPub());
+            ps.setInt(4, build.getId());
+            ps.executeUpdate();
+        } catch (SQLException e) {
+            throw new RuntimeException("Не удалось обновить сборку", e);
+        }
+    }
+
+    @Override
+    public List<Build> findPublicBuilds() {
+        List<Build> builds = new ArrayList<>();
+        try (Connection conn = DBConnection.getConnection();
+             PreparedStatement ps = conn.prepareStatement(ALL_PUBLIC_BUILDS);
+             ResultSet rs = ps.executeQuery()) {
+            while (rs.next()) {
+                builds.add(mapToBuild(rs));
+            }
+        } catch(SQLException e){
+            throw new RuntimeException("Не удалось найти публичные сборки", e);
+        }
+        return builds;
+    }
+
+        private static Build mapToBuild (ResultSet rs) throws SQLException {
+            return new Build(
+                    rs.getInt("id"),
+                    rs.getInt("user_id"),
+                    rs.getString("title"),
+                    rs.getString("description"),
+                    rs.getBoolean("is_public"));
+        }
+
+        private Component mapToComponent (ResultSet rs) throws SQLException {
+            int pw = rs.getInt("power_watts");
+            Integer powerWatts = rs.wasNull() ? null : pw;
+            return new Component(
+                    rs.getInt("id"),
+                    rs.getString("name"),
+                    rs.getInt("category_id"),
+                    rs.getBigDecimal("price"),
+                    rs.getString("image_path"),
+                    rs.getString("socket"),
+                    rs.getString("ram_type"),
+                    powerWatts
+            );
+        }
+    }

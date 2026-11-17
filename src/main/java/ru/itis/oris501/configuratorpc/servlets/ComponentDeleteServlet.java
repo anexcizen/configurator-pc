@@ -21,10 +21,15 @@ public class ComponentDeleteServlet extends HttpServlet {
     }
 
     @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        int id = Integer.parseInt(req.getParameter("id"));
-        componentService.delete(id);
-        resp.sendRedirect(req.getContextPath() + "/components");
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        try {
+            int id = Integer.parseInt(req.getParameter("id"));
+            componentService.delete(id);
+            resp.sendRedirect(req.getContextPath() + "/components");
+        } catch (IllegalArgumentException e) {
+            req.getSession().setAttribute("error", e.getMessage());
+            resp.sendRedirect(req.getContextPath() + "/components");
+        }
     }
 
 }

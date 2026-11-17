@@ -1,12 +1,19 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
+<%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>Каталог комплектующих</title>
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/template/style.css">
 </head>
 <body>
+
+<c:if test="${not empty sessionScope.error}">
+    <p style="color: red; font-weight: bold;">${sessionScope.error}</p>
+    <c:remove var="error" scope="session"/>
+</c:if>
 
 <c:if test="${not empty sessionScope.currentUser}">
     <div style="text-align: right;">
@@ -20,6 +27,8 @@
 <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
         <p><a href="${pageContext.request.contextPath}/components/edit">Добавить компонент</a></p>
 </c:if>
+
+<p><a href="${pageContext.request.contextPath}/builds">Перейти к сборкам</a></p>
 
 <form method="get" action="${pageContext.request.contextPath}/components">
     <label>Категория:
@@ -55,7 +64,7 @@
         <tr>
             <td>${comp.name}</td>
             <td>${comp.categoryId}</td>
-            <td>${comp.price}</td>
+            <td><my:price value="${comp.price}"/></td>
             <td>${comp.socket}</td>
             <td>${comp.ramType}</td>
             <td>${comp.powerWatts}</td>

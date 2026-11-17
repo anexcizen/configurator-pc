@@ -7,22 +7,22 @@ public class Build {
     private int userId;
     private String title;
     private String description;
-    private boolean isPublic;
+    private boolean pub;
     private LocalDateTime createdAt;
 
-    public Build(int id, int userId, String title, String description, boolean isPublic) {
+    public Build(int id, int userId, String title, String description, boolean pub) {
         this.id = id;
         this.userId = userId;
         this.title = title;
         this.description = description;
-        this.isPublic = isPublic;
+        this.pub = pub;
     }
 
-    public Build(int userId, String title, String description, boolean isPublic) {
+    public Build(int userId, String title, String description, boolean pub) {
         this.userId = userId;
         this.title = title;
         this.description = description;
-        this.isPublic = isPublic;
+        this.pub = pub;
     }
 
     public void setId(int id) {
@@ -41,12 +41,12 @@ public class Build {
         this.description = description;
     }
 
-    public boolean isPublic() {
-        return isPublic;
+    public boolean isPub() {
+        return pub;
     }
 
-    public void setPublic(boolean aPublic) {
-        this.isPublic = aPublic;
+    public void setPub(boolean pub) {
+        this.pub = pub;
     }
 
     public void setCreatedAt(LocalDateTime createdAt) {
