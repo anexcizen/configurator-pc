@@ -79,12 +79,15 @@
                         <c:forEach var="comp" items="${comps}">
                             <p>
                                 ${comp.name} <br><b>${comp.price} ₽</b>
-                                <form method="post" action="${pageContext.request.contextPath}/builds" style="display:inline; background:none; padding:0; box-shadow:none;">
-                                    <input type="hidden" name="action" value="removeComponent">
-                                    <input type="hidden" name="buildId" value="${build.id}">
-                                    <input type="hidden" name="componentId" value="${comp.id}">
-                                    <button type="submit" class="btn-link text-danger" onclick="return confirm('Убрать из сборки?')">Убрать</button>
-                                </form>
+
+                                <c:if test="${build.userId == sessionScope.currentUser.id}">
+                                    <form method="post" action="${pageContext.request.contextPath}/builds" style="display:inline; background:none; padding:0; box-shadow:none;">
+                                        <input type="hidden" name="action" value="removeComponent">
+                                        <input type="hidden" name="buildId" value="${build.id}">
+                                        <input type="hidden" name="componentId" value="${comp.id}">
+                                        <button type="submit" class="btn-link text-danger" onclick="return confirm('Убрать из сборки?')">Убрать</button>
+                                    </form>
+                                </c:if>
                             </p>
                         </c:forEach>
                     </c:when>

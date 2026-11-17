@@ -103,8 +103,10 @@ public class BuildServlet extends HttpServlet {
                 int buildId = Integer.parseInt(req.getParameter("buildId"));
                 int componentId = Integer.parseInt(req.getParameter("componentId"));
 
-                buildService.addComponent(buildId, componentId);
+                buildService.addComponent(buildId, componentId, user.getId());
                 resp.sendRedirect(req.getContextPath() + "/builds?id=" + buildId);
+            } catch (SecurityException e) {
+                resp.sendError(403, "Доступ запрещён");
             } catch (IllegalArgumentException e) {
                 req.getSession().setAttribute("error", e.getMessage());
                 resp.sendRedirect(req.getContextPath() + "/builds?id=" + req.getParameter("buildId"));
@@ -119,10 +121,15 @@ public class BuildServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/builds");
             }
         } else if ("removeComponent".equals(action)) {
-            int buildId = Integer.parseInt(req.getParameter("buildId"));
-            int componentId = Integer.parseInt(req.getParameter("componentId"));
-            buildService.removeComponent(buildId, componentId);
-            resp.sendRedirect(req.getContextPath() + "/builds?id=" + buildId);
+            try {
+                int buildId = Integer.parseInt(req.getParameter("buildId"));
+                int componentId = Integer.parseInt(req.getParameter("componentId"));
+
+                buildService.removeComponent(buildId, componentId, user.getId());
+                resp.sendRedirect(req.getContextPath() + "/builds?id=" + buildId);
+            } catch (SecurityException e) {
+                resp.sendError(403, "Доступ запрещён");
+            }
         } else if ("update".equals(action)) {
             try {
                 int buildId = Integer.parseInt(req.getParameter("id"));

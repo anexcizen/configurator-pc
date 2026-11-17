@@ -29,7 +29,7 @@
     <h2>Публичные сборки сообщества</h2>
 </c:if>
 <c:if test="${!isPublicView}">
-    <h2>Мои сборки</h2>
+    <h>Мои сборки</h>
     <h2>Создать новую сборку</h2>
     <form method="post" action="${pageContext.request.contextPath}/builds">
         <input type="hidden" name="action" value="create">

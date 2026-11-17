@@ -63,7 +63,13 @@
     <c:forEach var="comp" items="${components}">
         <tr>
             <td>${comp.name}</td>
-            <td>${comp.categoryId}</td>
+            <td>
+                <c:forEach var="cat" items="${categories}">
+                    <c:if test="${cat.id == comp.categoryId}">
+                        ${cat.name}
+                    </c:if>
+                </c:forEach>
+            </td>
             <td><my:price value="${comp.price}"/></td>
             <td>${comp.socket}</td>
             <td>${comp.ramType}</td>

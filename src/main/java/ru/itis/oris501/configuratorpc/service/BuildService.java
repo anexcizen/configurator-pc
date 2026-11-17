@@ -49,9 +49,11 @@ public class BuildService {
         return buildDao.findById(id);
     }
 
-    public void addComponent(int buildId, int componentId) {
+    public void addComponent(int buildId, int componentId, int userId) {
         idCheck(buildId);
         idCheck(componentId);
+
+        checkOwnership(buildId, userId);
 
         Component newComp = componentService.findById(componentId).orElseThrow(() -> new IllegalArgumentException("Компонент не найден"));
         checkCountLimit(buildId, newComp);
@@ -161,9 +163,12 @@ public class BuildService {
         buildDao.delete(id);
     }
 
-    public void removeComponent(int buildId, int componentId) {
+    public void removeComponent(int buildId, int componentId, int userId) {
         idCheck(buildId);
         idCheck(componentId);
+
+        checkOwnership(buildId, userId);
+
         buildDao.removeComponent(buildId, componentId);
     }
 
@@ -200,6 +205,14 @@ public class BuildService {
             throw new SecurityException("Доступ запрещён");
         }
         return build;
+    }
+
+    private void checkOwnership(int buildId, int userId) {
+        Build build = buildDao.findById(buildId)
+                .orElseThrow(() -> new IllegalArgumentException("Сборка не найдена"));
+        if (build.getUserId() != userId) {
+            throw new SecurityException("Вы можете изменять только свои сборки");
+        }
     }
 
     private static void idCheck(int id) {
