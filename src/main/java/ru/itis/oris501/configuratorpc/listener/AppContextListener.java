@@ -4,10 +4,7 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
-import ru.itis.oris501.configuratorpc.service.BuildService;
-import ru.itis.oris501.configuratorpc.service.CategoryService;
-import ru.itis.oris501.configuratorpc.service.ComponentService;
-import ru.itis.oris501.configuratorpc.service.UserService;
+import ru.itis.oris501.configuratorpc.service.*;
 
 @WebListener
 public class AppContextListener implements ServletContextListener {
@@ -18,6 +15,7 @@ public class AppContextListener implements ServletContextListener {
         ctx.setAttribute("componentService", new ComponentService());
         ctx.setAttribute("categoryService", new CategoryService());
         ctx.setAttribute("buildService", new BuildService((ComponentService) ctx.getAttribute("componentService"), (CategoryService) ctx.getAttribute("categoryService")));
+        ctx.setAttribute("commentService", new CommentService());
     }
 
     @Override

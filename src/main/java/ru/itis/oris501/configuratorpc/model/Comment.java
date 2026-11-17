@@ -8,6 +8,7 @@ public class Comment {
     private int userId;
     private String text;
     private LocalDateTime createdAt;
+    private String username;
 
     public Comment(int id, int buildId, int userId, String text) {
         this.id = id;
@@ -20,6 +21,14 @@ public class Comment {
         this.buildId = buildId;
         this.userId = userId;
         this.text = text;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
+    }
+
+    public String getUsername() {
+        return username;
     }
 
     public void setId(int id) {

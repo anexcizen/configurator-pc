@@ -12,6 +12,7 @@ import ru.itis.oris501.configuratorpc.model.Component;
 import ru.itis.oris501.configuratorpc.model.User;
 import ru.itis.oris501.configuratorpc.service.BuildService;
 import ru.itis.oris501.configuratorpc.service.CategoryService;
+import ru.itis.oris501.configuratorpc.service.CommentService;
 import ru.itis.oris501.configuratorpc.service.ComponentService;
 
 import java.io.IOException;
@@ -22,6 +23,7 @@ public class BuildServlet extends HttpServlet {
     private BuildService buildService;
     private ComponentService componentService;
     private CategoryService categoryService;
+    private CommentService commentService;
 
     @Override
     public void init() throws ServletException {
@@ -29,6 +31,7 @@ public class BuildServlet extends HttpServlet {
         buildService = (BuildService) context.getAttribute("buildService");
         componentService = (ComponentService) context.getAttribute("componentService");
         categoryService = (CategoryService) context.getAttribute("categoryService");
+        commentService = (CommentService) context.getAttribute("commentService");
     }
 
     @Override
@@ -61,6 +64,8 @@ public class BuildServlet extends HttpServlet {
                         grouped.put(cat.getName(), compsInCat);
                     }
                     req.setAttribute("groupedComponents", grouped);
+                    req.setAttribute("comments", commentService.getByBuildId(buildId));
+
                     req.getRequestDispatcher("/WEB-INF/views/build-view.jsp").forward(req, resp);
                 } catch (SecurityException e) {
                     resp.sendError(403, "Доступ запрещён");

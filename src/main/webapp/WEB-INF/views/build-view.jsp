@@ -111,4 +111,23 @@
     </c:if>
 </c:if>
 
+<hr>
+<h2>Комментарии</h2>
+
+<c:if test="${empty comments}">
+    <p>Пока нет комментариев.</p>
+</c:if>
+
+<c:forEach var="c" items="${comments}">
+    <div class="comment">
+        <p><b>${c.username}:</b> ${c.text}</p>
+    </div>
+</c:forEach>
+
+<form method="post" action="${pageContext.request.contextPath}/comments">
+    <input type="hidden" name="buildId" value="${build.id}">
+    <textarea name="commentText" rows="3" required placeholder="Ваш комментарий..."></textarea>
+    <button type="submit" class="btn">Оставить комментарий(удалить нельзя)</button>
+</form>
+
 <%@ include file="/template/footer.jspf" %>
