@@ -1,17 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>
-        <c:choose>
-            <c:when test="${not empty component.id}">Редактирование компонента</c:when>
-            <c:otherwise>Добавление компонента</c:otherwise>
-        </c:choose>
-    </title>
-</head>
-<body>
+<%@ include file="/template/header.jspf" %>
 
 <h1>
     <c:choose>
@@ -75,5 +64,4 @@
     <a href="${pageContext.request.contextPath}/components">Отмена</a>
 </form>
 
-</body>
-</html>
+<%@ include file="/template/footer.jspf" %>

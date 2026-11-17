@@ -1,26 +1,7 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
 <%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Каталог комплектующих</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/template/style.css">
-</head>
-<body>
-
-<c:if test="${not empty sessionScope.error}">
-    <p style="color: red; font-weight: bold;">${sessionScope.error}</p>
-    <c:remove var="error" scope="session"/>
-</c:if>
-
-<c:if test="${not empty sessionScope.currentUser}">
-    <div style="text-align: right;">
-        Привет, <b>${sessionScope.currentUser.username}</b>!
-        <a href="${pageContext.request.contextPath}/logout">Выйти из аккаунта</a>
-    </div>
-</c:if>
+<%@ include file="/template/header.jspf" %>
 
 <h1>Каталог комплектующих</h1>
 
@@ -76,10 +57,14 @@
             <td>${comp.powerWatts}</td>
             <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                 <td>
-                    <a href="${pageContext.request.contextPath}/components/edit?id=${comp.id}">✏️</a>
-                    <form method="post" action="${pageContext.request.contextPath}/components/delete" style="display:inline">
+                    <a href="${pageContext.request.contextPath}/components/edit?id=${comp.id}" class="icon-btn" title="Редактировать">
+                        <img src="${pageContext.request.contextPath}/img/icons/edit.png" alt="Редактировать" width="20" height="20">
+                    </a>
+                    <form method="post" action="${pageContext.request.contextPath}/components/delete" class="form-delete" data-confirm="Удалить этот компонент?" style="display:inline;">
                         <input type="hidden" name="id" value="${comp.id}">
-                        <button type="submit" onclick="return confirm('Удалить?')">🗑️</button>
+                        <button type="submit" class="icon-btn" title="Удалить">
+                            <img src="${pageContext.request.contextPath}/img/icons/delete.png" alt="Удалить" width="20" height="20">
+                        </button>
                     </form>
                 </td>
             </c:if>
@@ -92,5 +77,4 @@
     <p>Комплектующих нет.</p>
 </c:if>
 
-</body>
-</html>
+<%@ include file="/template/footer.jspf" %>

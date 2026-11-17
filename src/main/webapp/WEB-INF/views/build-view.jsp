@@ -1,29 +1,9 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>${build.title}</title>
-</head>
-<body>
+<%@ taglib prefix="my" tagdir="/WEB-INF/tags" %>
+<%@ include file="/template/header.jspf" %>
 
-<c:if test="${not empty sessionScope.currentUser}">
-    <div style="text-align: right;">
-        Привет, <b>${sessionScope.currentUser.username}</b>!
-        <a href="${pageContext.request.contextPath}/logout">Выйти из аккаунта</a>
-    </div>
-</c:if>
-
-<p>
-    <a href="${pageContext.request.contextPath}/builds">← К списку сборок</a> |
-    <a href="${pageContext.request.contextPath}/components">К комплектующим</a>
-</p>
-
-<c:if test="${not empty sessionScope.error}">
-    <p style="color: red; font-weight: bold;">${sessionScope.error}</p>
-    <c:remove var="error" scope="session"/>
-</c:if>
+<p><a href="${pageContext.request.contextPath}/builds">← Назад к сборкам</a></p>
 
 <h1>${build.title}</h1>
 
@@ -78,7 +58,8 @@
                     <c:when test="${not empty comps}">
                         <c:forEach var="comp" items="${comps}">
                             <p>
-                                ${comp.name} <br><b>${comp.price} ₽</b>
+                                ${comp.name} <br>
+                                <b><my:price value="${comp.price}"/></b>
 
                                 <c:if test="${build.userId == sessionScope.currentUser.id}">
                                     <form method="post" action="${pageContext.request.contextPath}/builds" style="display:inline; background:none; padding:0; box-shadow:none;">
@@ -118,7 +99,7 @@
                     <select name="componentId" required>
                         <c:forEach var="comp" items="${allComponents}">
                             <option value="${comp.id}">
-                                ${comp.name} — ${comp.price}
+                                ${comp.name} — <my:price value="${comp.price}"/>
                             </option>
                         </c:forEach>
                     </select>
@@ -130,5 +111,4 @@
     </c:if>
 </c:if>
 
-</body>
-</html>
+<%@ include file="/template/footer.jspf" %>

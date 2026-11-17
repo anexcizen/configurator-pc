@@ -119,6 +119,7 @@ public class BuildServlet extends HttpServlet {
             } catch (IllegalArgumentException e) {
                 req.getSession().setAttribute("error", e.getMessage());
                 resp.sendRedirect(req.getContextPath() + "/builds");
+                return;
             }
         } else if ("removeComponent".equals(action)) {
             try {

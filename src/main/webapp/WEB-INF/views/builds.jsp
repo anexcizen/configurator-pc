@@ -1,24 +1,8 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<!DOCTYPE html>
-<html lang="ru">
-<head>
-    <meta charset="UTF-8">
-    <title>Мои сборки</title>
-    <link rel="stylesheet" href="${pageContext.request.contextPath}/template/style.css">
-</head>
-<body>
+<%@ include file="/template/header.jspf" %>
 
-<c:if test="${not empty sessionScope.currentUser}">
-    <div style="text-align: right;">
-        Привет, <b>${sessionScope.currentUser.username}</b>!
-        <a href="${pageContext.request.contextPath}/logout">Выйти из аккаунта</a>
-    </div>
-</c:if>
-
-<p>
-    <a href="${pageContext.request.contextPath}/components">← К комплектующим</a>
-</p>
+<h1>Сборки</h1>
 
 <div style="margin-bottom: 20px;">
     <a href="${pageContext.request.contextPath}/builds" class="btn-link">Мои сборки</a> |
@@ -29,7 +13,6 @@
     <h2>Публичные сборки сообщества</h2>
 </c:if>
 <c:if test="${!isPublicView}">
-    <h>Мои сборки</h>
     <h2>Создать новую сборку</h2>
     <form method="post" action="${pageContext.request.contextPath}/builds">
         <input type="hidden" name="action" value="create">
@@ -86,17 +69,17 @@
                 </td>
                 <td class="actions">
                     <a href="${pageContext.request.contextPath}/builds?id=${b.id}" class="btn-link">Открыть</a>
-
-                    <form method="post" action="${pageContext.request.contextPath}/builds" style="display:inline;">
-                        <input type="hidden" name="action" value="delete">
-                        <input type="hidden" name="id" value="${b.id}">
-                        <button type="submit" class="btn-link text-danger" onclick="return confirm('Вы уверены, что хотите удалить сборку?')">Удалить</button>
-                    </form>
+                    <c:if test="${b.userId == sessionScope.currentUser.id}">
+                        <form method="post" action="${pageContext.request.contextPath}/builds" class="form-delete" data-confirm="Вы уверены, что хотите удалить эту сборку?" style="display:inline;">
+                            <input type="hidden" name="action" value="delete">
+                            <input type="hidden" name="id" value="${b.id}">
+                            <button type="submit" class="btn-link text-danger">Удалить</button>
+                        </form>
+                    </c:if>
                 </td>
             </tr>
         </c:forEach>
     </table>
 </c:if>
 
-</body>
-</html>
+<%@ include file="/template/footer.jspf" %>
