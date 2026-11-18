@@ -30,6 +30,7 @@
 
 <table border="1" cellpadding="6">
     <tr>
+        <th>Фото</th>
         <th>Название</th>
         <th>Категория</th>
         <th>Цена</th>
@@ -43,6 +44,17 @@
 
     <c:forEach var="comp" items="${components}">
         <tr>
+            <td>
+                <c:choose>
+                    <c:when test="${not empty comp.imagePath}">
+                        <img src="${pageContext.request.contextPath}/img/components/${comp.imagePath}"
+                             alt="${comp.name}" width="60" height="60" style="object-fit: contain;">
+                    </c:when>
+                    <c:otherwise>
+                        <span style="color: #666; font-size: 12px;">Нет фото</span>
+                   </c:otherwise>
+                </c:choose>
+            </td>
             <td>${comp.name}</td>
             <td>
                 <c:forEach var="cat" items="${categories}">

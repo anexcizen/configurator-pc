@@ -49,27 +49,34 @@
 <c:if test="${not empty buildComponents}">
     <div class="build-layout">
         <c:forEach var="entry" items="${groupedComponents}">
-            <c:set var="catName" value="${entry.key}" />
-            <c:set var="comps" value="${entry.value}" />
-
             <div class="category-block">
-                <h3>${catName}</h3>
+                <h3>${entry.key}</h3>
                 <c:choose>
-                    <c:when test="${not empty comps}">
-                        <c:forEach var="comp" items="${comps}">
-                            <p>
-                                ${comp.name} <br>
-                                <b><my:price value="${comp.price}"/></b>
-
-                                <c:if test="${build.userId == sessionScope.currentUser.id}">
-                                    <form method="post" action="${pageContext.request.contextPath}/builds" style="display:inline; background:none; padding:0; box-shadow:none;">
-                                        <input type="hidden" name="action" value="removeComponent">
-                                        <input type="hidden" name="buildId" value="${build.id}">
-                                        <input type="hidden" name="componentId" value="${comp.id}">
-                                        <button type="submit" class="btn-link text-danger" onclick="return confirm('Убрать из сборки?')">Убрать</button>
-                                    </form>
+                    <c:when test="${not empty entry.value}">
+                        <c:forEach var="comp" items="${entry.value}">
+                            <div class="build-item">
+                                <c:if test="${not empty comp.imagePath}">
+                                    <img src="${pageContext.request.contextPath}/img/components/${comp.imagePath}"
+                                         alt="${comp.name}" class="build-item-img">
                                 </c:if>
-                            </p>
+                                <c:if test="${empty comp.imagePath}">
+                                    <div class="build-item-img empty-img">Нет фото</div>
+                                </c:if>
+
+                                <div class="build-item-info">
+                                    <p>${comp.name}</p>
+                                    <b><my:price value="${comp.price}"/></b>
+
+                                    <c:if test="${build.userId == sessionScope.currentUser.id}">
+                                        <form method="post" action="${pageContext.request.contextPath}/builds" style="display:inline; background:none; padding:0; box-shadow:none; margin:0;">
+                                            <input type="hidden" name="action" value="removeComponent">
+                                            <input type="hidden" name="buildId" value="${build.id}">
+                                            <input type="hidden" name="componentId" value="${comp.id}">
+                                            <button type="submit" class="btn-link text-danger" onclick="return confirm('Убрать компонент из сборки?')">Убрать</button>
+                                        </form>
+                                    </c:if>
+                                </div>
+                            </div>
                         </c:forEach>
                     </c:when>
                     <c:otherwise>
