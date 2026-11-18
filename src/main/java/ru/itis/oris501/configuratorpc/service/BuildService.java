@@ -5,6 +5,7 @@ import ru.itis.oris501.configuratorpc.model.Build;
 import ru.itis.oris501.configuratorpc.model.Component;
 import ru.itis.oris501.configuratorpc.model.User;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -239,6 +240,16 @@ public class BuildService {
             throw new SecurityException("Доступ запрещён");
         }
         return build;
+    }
+
+    public BigDecimal calculateTotalPrice(List<Component> components) {
+        BigDecimal total = BigDecimal.ZERO;
+        for (Component c : components) {
+            if (c.getPrice() != null) {
+                total = total.add(c.getPrice());
+            }
+        }
+        return total;
     }
 
     private void checkOwnership(int buildId, int userId) {

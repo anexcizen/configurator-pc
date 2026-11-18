@@ -51,30 +51,15 @@ public class BuildServlet extends HttpServlet {
 
                 try {
                     Build build = buildService.getBuildForUser(buildId, user);
-                    req.setAttribute("build", build);
-
                     List<Component> buildComps = buildService.getComponents(buildId);
+                    List<Component> allComponents = componentService.findAll();
+
+                    req.setAttribute("build", build);
                     req.setAttribute("buildComponents", buildComps);
-
-                    BigDecimal total = BigDecimal.ZERO;
-                    for (Component c : buildComps) {
-                        if (c.getPrice() != null) {
-                            total = total.add(c.getPrice());
-                        }
-                    }
-                    req.setAttribute("totalPrice", total);
-
-                    req.setAttribute("allComponents", componentService.findAll());
-
-                    Map<String, List<Component>> grouped = new LinkedHashMap<>();
-                    for (Category cat : categoryService.findAll()) {
-                        List<Component> compsInCat = new ArrayList<>();
-                        for (Component comp : buildComps) {
-                            if (comp.getCategoryId() == cat.getId()) compsInCat.add(comp);
-                        }
-                        grouped.put(cat.getName(), compsInCat);
-                    }
-                    req.setAttribute("groupedComponents", grouped);
+                    req.setAttribute("totalPrice", buildService.calculateTotalPrice(buildComps));
+                    req.setAttribute("categories", categoryService.findAll());
+                    req.setAttribute("groupedBuildComps", componentService.groupByCategory(buildComps));
+                    req.setAttribute("availableByCategory", componentService.groupByCategory(allComponents));
                     req.setAttribute("comments", commentService.getByBuildId(buildId));
 
                     req.getRequestDispatcher("/WEB-INF/views/build-view.jsp").forward(req, resp);

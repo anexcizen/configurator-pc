@@ -6,8 +6,7 @@ import ru.itis.oris501.configuratorpc.model.Category;
 import ru.itis.oris501.configuratorpc.model.Component;
 
 import java.math.BigDecimal;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 import java.util.logging.Logger;
 
 public class ComponentService {
@@ -78,6 +77,22 @@ public class ComponentService {
             LOGGER.severe("Ошибка при удалении компонента id=" + id + ": " + e.getMessage());
             throw e;
         }
+    }
+
+    public Map<Integer, List<Component>> groupByCategory(List<Component> components) {
+        Map<Integer, List<Component>> grouped = new LinkedHashMap<>();
+        List<Category> categories = categoryDao.findAll();
+
+        for (Category cat : categories) {
+            List<Component> compsInCat = new ArrayList<>();
+            for (Component comp : components) {
+                if (comp.getCategoryId() == cat.getId()) {
+                    compsInCat.add(comp);
+                }
+            }
+            grouped.put(cat.getId(), compsInCat);
+        }
+        return grouped;
     }
 
     private void validate(Component c) {
