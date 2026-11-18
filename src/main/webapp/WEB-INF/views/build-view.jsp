@@ -40,21 +40,21 @@
     <hr>
 </c:if>
 
-<h2>Компоненты в сборке</h2>
-<p><b>Итого:</b> <my:price value="${totalPrice}"/></p>
+<h2>Конфигуратор сборки</h2>
+<p style="font-size: 18px; margin-bottom: 20px;"><b>Итоговая стоимость:</b> <span style="color: #4ade80; font-weight: 800;"><my:price value="${totalPrice}"/></span></p>
 
-<c:if test="${empty buildComponents}">
-    <p>В сборке пока нет компонентов.</p>
-</c:if>
+<div class="build-layout">
+    <c:forEach var="cat" items="${categories}">
+        <c:set var="installedList" value="${groupedBuildComps[cat.id]}"/>
+        <c:set var="availableList" value="${availableByCategory[cat.id]}"/>
 
-<c:if test="${not empty buildComponents}">
-    <div class="build-layout">
-        <c:forEach var="entry" items="${groupedComponents}">
-            <div class="category-block">
-                <h3><c:out value="${entry.key}"/></h3>
+        <div class="category-block">
+            <h3><c:out value="${cat.name}"/></h3>
+
+            <div class="category-items">
                 <c:choose>
-                    <c:when test="${not empty entry.value}">
-                        <c:forEach var="comp" items="${entry.value}">
+                    <c:when test="${not empty installedList}">
+                        <c:forEach var="comp" items="${installedList}">
                             <div class="build-item">
                                 <c:if test="${not empty comp.imagePath}">
                                     <img src="${pageContext.request.contextPath}/img/components/${comp.imagePath}"
@@ -69,11 +69,11 @@
                                     <b><my:price value="${comp.price}"/></b>
 
                                     <c:if test="${build.userId == sessionScope.currentUser.id}">
-                                        <form method="post" class="form-delete" data-confirm="Убрать компонент из сборки?" action="${pageContext.request.contextPath}/builds/component" style="display:inline; background:none; padding:0; box-shadow:none; margin:0;">
+                                        <form method="post" class="form-delete" data-confirm="Убрать компонент из сборки?" action="${pageContext.request.contextPath}/builds/component" style="display:inline; background:none; padding:0; box-shadow:none; margin:0; border:none;">
                                             <input type="hidden" name="action" value="remove">
                                             <input type="hidden" name="buildId" value="${build.id}">
                                             <input type="hidden" name="componentId" value="${comp.id}">
-                                            <button class="btn-link text-danger">Убрать</button>
+                                            <button class="btn-link text-danger" style="padding-left: 0 !important;">Убрать</button>
                                         </form>
                                     </c:if>
                                 </div>
@@ -85,45 +85,42 @@
                     </c:otherwise>
                 </c:choose>
             </div>
-        </c:forEach>
-    </div>
-</c:if>
 
-<hr>
+            <c:if test="${build.userId == sessionScope.currentUser.id}">
+                <div class="category-add-section">
+                    <c:choose>
+                        <c:when test="${not empty availableList}">
+                            <button type="button" class="btn-toggle-add">+ Добавить</button>
 
-<c:if test="${build.userId == sessionScope.currentUser.id}">
-    <h2>Добавить компонент в сборку</h2>
-    <c:if test="${empty allComponents}">
-        <p>Нет доступных комплектующих. Сначала добавьте их в каталог.</p>
-    </c:if>
+                            <form method="post" action="${pageContext.request.contextPath}/builds/component" class="category-add-form" style="display: none;">
+                                <input type="hidden" name="action" value="add">
+                                <input type="hidden" name="buildId" value="${build.id}">
 
-    <c:if test="${not empty allComponents}">
-        <form method="post" action="${pageContext.request.contextPath}/builds/component">
-            <input type="hidden" name="action" value="add">
-            <input type="hidden" name="buildId" value="${build.id}">
+                                <input type="text" class="component-search" placeholder="Поиск по названию..." autocomplete="off">
 
-            <p>
-                <label>Быстрый фильтр по названию:<br>
-                    <input type="text" id="componentSearch" placeholder="Начните вводить название (например, RTX или Intel)..." autocomplete="off">
-                </label>
-            </p>
+                                <select name="componentId" class="component-select" required>
+                                    <c:forEach var="availComp" items="${availableList}">
+                                        <option value="${availComp.id}">
+                                            <c:out value="${availComp.name}"/> — <my:price value="${availComp.price}"/>
+                                        </option>
+                                    </c:forEach>
+                                </select>
 
-            <p>
-                <label>Выберите компонент из списка:<br>
-                    <select name="componentId" id="componentSelect" required>
-                        <c:forEach var="comp" items="${allComponents}">
-                            <option value="${comp.id}">
-                                <c:out value="${comp.name}"/> - <my:price value="${comp.price}"/>
-                            </option>
-                        </c:forEach>
-                    </select>
-                </label>
-           </p>
-
-            <button type="submit">Добавить в сборку</button>
-        </form>
-    </c:if>
-</c:if>
+                                <div class="category-form-actions">
+                                    <button type="submit" class="btn btn-sm">Выбрать</button>
+                                    <button type="button" class="btn-cancel-add">Отмена</button>
+                                </div>
+                            </form>
+                        </c:when>
+                        <c:otherwise>
+                            <p class="empty" style="font-size: 12px; margin-top: 10px;">Нет компонентов в каталоге</p>
+                        </c:otherwise>
+                    </c:choose>
+                </div>
+            </c:if>
+        </div>
+    </c:forEach>
+</div>
 
 <hr>
 <h2>Комментарии</h2>
