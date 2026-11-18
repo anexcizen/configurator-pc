@@ -9,6 +9,7 @@ public class Build {
     private String description;
     private boolean pub;
     private LocalDateTime createdAt;
+    private String username;
 
     public Build(int id, int userId, String title, String description, boolean pub) {
         this.id = id;
@@ -71,5 +72,13 @@ public class Build {
 
     public LocalDateTime getCreatedAt() {
         return createdAt;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public void setUsername(String username) {
+        this.username = username;
     }
 }

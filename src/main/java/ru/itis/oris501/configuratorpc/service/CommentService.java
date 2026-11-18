@@ -5,7 +5,6 @@ import ru.itis.oris501.configuratorpc.dao.impl.CommentDaoJdbc;
 import ru.itis.oris501.configuratorpc.model.Comment;
 
 import java.util.List;
-import java.util.Optional;
 
 public class CommentService {
     private final CommentDao commentDao;

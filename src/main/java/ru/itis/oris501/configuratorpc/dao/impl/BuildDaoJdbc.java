@@ -16,14 +16,14 @@ import java.util.Optional;
 public class BuildDaoJdbc implements BuildDao {
     private static final String INSERT = "INSERT INTO builds (user_id, title, description, is_public) " +
             "VALUES (?, ?, ?, ?) RETURNING id";
-    private static final String BUILDS_WHERE_ID = "SELECT * FROM builds WHERE id = ?";
-    private static final String BUILDS_WHERE_USER_ID = "SELECT * FROM builds WHERE user_id = ?";
+    private static final String BUILDS_WHERE_ID = "SELECT b.*, u.username FROM builds b JOIN users u ON u.id = b.user_id WHERE b.id = ?";
+    private static final String BUILDS_WHERE_USER_ID = "SELECT b.*, u.username FROM builds b JOIN users u On b.user_id = u.id WHERE b.user_id = ?";
     private static final String INSERT_COMPONENT = "INSERT INTO build_components (build_id, component_id) VALUES (?, ?)";
     private static final String COMPONENT_WHERE_BC_BUILD_ID = "SELECT c.* FROM components c JOIN build_components bc ON c.id = bc.component_id WHERE bc.build_id = ?";
     private static final String DELETE = "DELETE FROM builds WHERE id = ?";
     private static final String DELETE_COMPONENT = "DELETE FROM build_components WHERE build_id = ? AND component_id = ?";
     private static final String UPDATE = "UPDATE builds SET title=?, description=?, is_public=? WHERE id=?";
-    private static final String ALL_PUBLIC_BUILDS = "SELECT * FROM builds WHERE is_public = true ORDER BY id DESC";
+    private static final String ALL_PUBLIC_BUILDS = "SELECT b.*, u.username FROM builds b JOIN users u ON u.id = b.user_id WHERE b.is_public = true ORDER BY b.id DESC";
 
     @Override
     public Build save(Build build) {
@@ -161,12 +161,14 @@ public class BuildDaoJdbc implements BuildDao {
     }
 
         private static Build mapToBuild (ResultSet rs) throws SQLException {
-            return new Build(
+            Build build = new Build(
                     rs.getInt("id"),
                     rs.getInt("user_id"),
                     rs.getString("title"),
                     rs.getString("description"),
                     rs.getBoolean("is_public"));
+            build.setUsername(rs.getString("username"));
+            return build;
         }
 
         private Component mapToComponent (ResultSet rs) throws SQLException {

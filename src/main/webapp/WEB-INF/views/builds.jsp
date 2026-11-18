@@ -51,6 +51,7 @@
 <c:if test="${not empty builds}">
     <table>
         <tr>
+            <th>Автор</th>
             <th>Название</th>
             <th>Описание</th>
             <th>Публичная</th>
@@ -58,11 +59,11 @@
         </tr>
         <c:forEach var="b" items="${builds}">
             <tr>
+                <td>${b.username}</td>
                 <td>${b.title}</td>
                 <td>${b.description}</td>
                 <td>
                     <c:choose>
-                        <%-- Вот здесь теперь b.pub вместо b.isPublic --%>
                         <c:when test="${b.pub}">Да</c:when>
                         <c:otherwise>Нет</c:otherwise>
                     </c:choose>
