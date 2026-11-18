@@ -114,19 +114,6 @@ public class BuildServlet extends HttpServlet {
                 req.getSession().setAttribute("error", e.getMessage());
                 resp.sendRedirect(req.getContextPath() + "/builds");
             }
-        } else if ("addComponent".equals(action)) {
-            try {
-                int buildId = Integer.parseInt(req.getParameter("buildId"));
-                int componentId = Integer.parseInt(req.getParameter("componentId"));
-
-                buildService.addComponent(buildId, componentId, user.getId());
-                resp.sendRedirect(req.getContextPath() + "/builds?id=" + buildId);
-            } catch (SecurityException e) {
-                resp.sendError(403, "Доступ запрещён");
-            } catch (IllegalArgumentException e) {
-                req.getSession().setAttribute("error", e.getMessage());
-                resp.sendRedirect(req.getContextPath() + "/builds?id=" + req.getParameter("buildId"));
-            }
         } else if ("delete".equals(action)) {
             try {
                 int buildId = Integer.parseInt(req.getParameter("id"));
@@ -136,19 +123,6 @@ public class BuildServlet extends HttpServlet {
                 req.getSession().setAttribute("error", e.getMessage());
                 resp.sendRedirect(req.getContextPath() + "/builds");
                 return;
-            }
-        } else if ("removeComponent".equals(action)) {
-            try {
-                int buildId = Integer.parseInt(req.getParameter("buildId"));
-                int componentId = Integer.parseInt(req.getParameter("componentId"));
-
-                buildService.removeComponent(buildId, componentId, user.getId());
-                resp.sendRedirect(req.getContextPath() + "/builds?id=" + buildId);
-            } catch (IllegalArgumentException e) {
-                req.getSession().setAttribute("error", e.getMessage());
-                resp.sendRedirect(req.getContextPath() + "/builds?id=" + req.getParameter("id"));
-            } catch (SecurityException e) {
-                resp.sendError(403, "Доступ запрещён");
             }
         } else if ("update".equals(action)) {
             try {

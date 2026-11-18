@@ -28,7 +28,7 @@
 
 <hr>
 
-<table border="1" cellpadding="6">
+<table>
     <tr>
         <th>Фото</th>
         <th>Название</th>

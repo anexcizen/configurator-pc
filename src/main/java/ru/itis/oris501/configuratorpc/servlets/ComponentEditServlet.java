@@ -55,16 +55,17 @@ public class ComponentEditServlet extends HttpServlet {
         String ramType = req.getParameter("ramType");
         String powerWattsStr = req.getParameter("powerWatts");
         String imagePath = req.getParameter("imagePath");
-        if (imagePath != null && imagePath.isBlank()) {
-            imagePath = null;
-        }
 
         Component component;
         try {
             int categoryId = Integer.parseInt(categoryIdStr);
             BigDecimal price = new BigDecimal(priceStr);
-            Integer powerWatts = (powerWattsStr == null || powerWattsStr.isBlank())
-                    ? null : Integer.parseInt(powerWattsStr);
+
+            Integer powerWatts = (powerWattsStr == null || powerWattsStr.isBlank()) ? null : Integer.parseInt(powerWattsStr);
+            if (imagePath != null && imagePath.isBlank()) imagePath = null;
+            if (socket != null && socket.isBlank()) socket = null;
+            if (ramType != null && ramType.isBlank()) ramType = null;
+
             component = new Component(name, categoryId, price, imagePath, socket, ramType, powerWatts);
         } catch (NumberFormatException e) {
             req.setAttribute("error", "Некорректный формат числа");
@@ -74,7 +75,7 @@ public class ComponentEditServlet extends HttpServlet {
         }
 
         try {
-            if (idStr == null || idStr.isBlank()) {
+            if (idStr == null || idStr.isBlank() || "0".equals(idStr)) {
                 componentService.create(component);
             } else {
                 component.setId(Integer.parseInt(idStr));

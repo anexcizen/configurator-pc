@@ -2,8 +2,7 @@ package ru.itis.oris501.configuratorpc.service;
 
 import ru.itis.oris501.configuratorpc.dao.CategoryDao;
 import ru.itis.oris501.configuratorpc.dao.ComponentDao;
-import ru.itis.oris501.configuratorpc.dao.impl.CategoryDaoJdbc;
-import ru.itis.oris501.configuratorpc.dao.impl.ComponentDaoJdbc;
+import ru.itis.oris501.configuratorpc.model.Category;
 import ru.itis.oris501.configuratorpc.model.Component;
 
 import java.math.BigDecimal;
@@ -76,19 +75,33 @@ public class ComponentService {
 
     private void validate(Component c) {
         if (c == null) {
-            throw new IllegalArgumentException("компонент не может быть null");
+            throw new IllegalArgumentException("Компонент не может быть null");
         }
         if (c.getName() == null || c.getName().isBlank()) {
-            throw new IllegalArgumentException("название компонента не может быть пустым");
+            throw new IllegalArgumentException("Название компонента не может быть пустым");
         }
         if (c.getPrice() == null || c.getPrice().compareTo(BigDecimal.ZERO) <= 0) {
-            throw new IllegalArgumentException("цена должна быть строго > 0");
+            throw new IllegalArgumentException("Цена должна быть строго больше 0");
         }
-        if (categoryDao.findById(c.getCategoryId()).isEmpty()) {
-            throw new IllegalArgumentException("категории с таким id не существует");
+
+        Category category = categoryDao.findById(c.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Категории с таким id не существует"));
+        String catName = category.getName();
+
+        if ("Процессор".equals(catName) || "Материнская плата".equals(catName)) {
+            if (c.getSocket() == null || c.getSocket().isBlank()) {
+                throw new IllegalArgumentException("Для этой категории нужно указать сокет");
+            }
         }
-        if (c.getPowerWatts() != null && c.getPowerWatts() <= 0) {
-            throw new IllegalArgumentException("мощность > 0");
+        if ("Материнская плата".equals(catName) || "Оперативная память".equals(catName)) {
+            if (c.getRamType() == null || c.getRamType().isBlank()) {
+                throw new IllegalArgumentException("Для этой категории нужно указать тип памяти (RAM)");
+            }
+        }
+        if ("Процессор".equals(catName) || "Видеокарта".equals(catName) || "Блок питания".equals(catName)) {
+            if (c.getPowerWatts() == null || c.getPowerWatts() <= 0) {
+                throw new IllegalArgumentException("Для этой категории нужно указать мощность (Вт > 0)");
+            }
         }
     }
 }

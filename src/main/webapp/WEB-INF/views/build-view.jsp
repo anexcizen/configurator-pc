@@ -69,11 +69,11 @@
                                     <b><my:price value="${comp.price}"/></b>
 
                                     <c:if test="${build.userId == sessionScope.currentUser.id}">
-                                        <form method="post" action="${pageContext.request.contextPath}/builds" style="display:inline; background:none; padding:0; box-shadow:none; margin:0;">
-                                            <input type="hidden" name="action" value="removeComponent">
+                                        <form method="post" class="form-delete" data-confirm="Убрать компонент из сборки?" action="${pageContext.request.contextPath}/builds/component" style="display:inline; background:none; padding:0; box-shadow:none; margin:0;">
+                                            <input type="hidden" name="action" value="remove">
                                             <input type="hidden" name="buildId" value="${build.id}">
                                             <input type="hidden" name="componentId" value="${comp.id}">
-                                            <button type="submit" class="form-delete" data-confirm="Убрать компонент из сборки?">Убрать</button>
+                                            <button class="btn-link text-danger">Убрать</button>
                                         </form>
                                     </c:if>
                                 </div>
@@ -98,21 +98,27 @@
     </c:if>
 
     <c:if test="${not empty allComponents}">
-        <form method="post" action="${pageContext.request.contextPath}/builds">
-            <input type="hidden" name="action" value="addComponent">
+        <form method="post" action="${pageContext.request.contextPath}/builds/component">
+            <input type="hidden" name="action" value="add">
             <input type="hidden" name="buildId" value="${build.id}">
 
             <p>
-                <label>Компонент:<br>
-                    <select name="componentId" required>
+                <label>Быстрый фильтр по названию:<br>
+                    <input type="text" id="componentSearch" placeholder="Начните вводить название (например, RTX или Intel)..." autocomplete="off">
+                </label>
+            </p>
+
+            <p>
+                <label>Выберите компонент из списка:<br>
+                    <select name="componentId" id="componentSelect" required>
                         <c:forEach var="comp" items="${allComponents}">
                             <option value="${comp.id}">
-                                <c:out value="${comp.name}"/> — <my:price value="${comp.price}"/>
+                                <c:out value="${comp.name}"/> - <my:price value="${comp.price}"/>
                             </option>
                         </c:forEach>
                     </select>
                 </label>
-            </p>
+           </p>
 
             <button type="submit">Добавить в сборку</button>
         </form>
@@ -135,7 +141,7 @@
 <form method="post" action="${pageContext.request.contextPath}/comments">
     <input type="hidden" name="buildId" value="${build.id}">
     <textarea name="commentText" rows="3" required placeholder="Ваш комментарий..."></textarea>
-    <button type="submit" class="btn">Оставить комментарий(удалить нельзя)</button>
+    <button type="submit" class="btn">Отправить</button>
 </form>
 
 <%@ include file="/template/footer.jspf" %>
