@@ -5,9 +5,9 @@
 
 <p><a href="${pageContext.request.contextPath}/builds">← Назад к сборкам</a></p>
 
-<h1>${build.title}</h1>
+<h1><c:out value="${build.title}"/></h1>
 
-<p><b>Описание:</b> ${build.description}</p>
+<p><b>Описание:</b> <c:out value="${build.description}"/></p>
 <p><b>Публичная:</b>
     <c:choose>
         <c:when test="${build.pub}">Да</c:when>
@@ -21,13 +21,13 @@
     <h2>Редактировать информацию о сборке</h2>
     <form method="post" action="${pageContext.request.contextPath}/builds">
         <input type="hidden" name="action" value="update">
-        <input type="hidden" name="id" value="${build.id}">
+        <input type="hidden" name="id" value="<c:out value='${build.id}'/>">
 
         <p>
-            <label>Название: <input type="text" name="title" value="${build.title}" required></label>
+            <label>Название: <input type="text" name="title" value="<c:out value='${build.title}'/>" required></label>
         </p>
         <p>
-            <label>Описание: <input type="text" name="description" value="${build.description}"></label>
+            <label>Описание: <input type="text" name="description" value="<c:out value='${build.description}'/>"></label>
         </p>
         <p>
             <label>
@@ -51,21 +51,21 @@
     <div class="build-layout">
         <c:forEach var="entry" items="${groupedComponents}">
             <div class="category-block">
-                <h3>${entry.key}</h3>
+                <h3><c:out value="${entry.key}"/></h3>
                 <c:choose>
                     <c:when test="${not empty entry.value}">
                         <c:forEach var="comp" items="${entry.value}">
                             <div class="build-item">
                                 <c:if test="${not empty comp.imagePath}">
                                     <img src="${pageContext.request.contextPath}/img/components/${comp.imagePath}"
-                                         alt="${comp.name}" class="build-item-img">
+                                         alt="<c:out value='${comp.name}'/>" class="build-item-img">
                                 </c:if>
                                 <c:if test="${empty comp.imagePath}">
                                     <div class="build-item-img empty-img">Нет фото</div>
                                 </c:if>
 
                                 <div class="build-item-info">
-                                    <p>${comp.name}</p>
+                                    <p><c:out value="${comp.name}"/></p>
                                     <b><my:price value="${comp.price}"/></b>
 
                                     <c:if test="${build.userId == sessionScope.currentUser.id}">
@@ -73,7 +73,7 @@
                                             <input type="hidden" name="action" value="removeComponent">
                                             <input type="hidden" name="buildId" value="${build.id}">
                                             <input type="hidden" name="componentId" value="${comp.id}">
-                                            <button type="submit" class="btn-link text-danger" onclick="return confirm('Убрать компонент из сборки?')">Убрать</button>
+                                            <button type="submit" class="form-delete" data-confirm="Убрать компонент из сборки?">Убрать</button>
                                         </form>
                                     </c:if>
                                 </div>
@@ -107,7 +107,7 @@
                     <select name="componentId" required>
                         <c:forEach var="comp" items="${allComponents}">
                             <option value="${comp.id}">
-                                ${comp.name} — <my:price value="${comp.price}"/>
+                                <c:out value="${comp.name}"/> — <my:price value="${comp.price}"/>
                             </option>
                         </c:forEach>
                     </select>
@@ -128,7 +128,7 @@
 
 <c:forEach var="c" items="${comments}">
     <div class="comment">
-        <p><b>${c.username}:</b> ${c.text}</p>
+        <p><b><c:out value="${c.username}"/>:</b> <c:out value="${c.text}"/></p>
     </div>
 </c:forEach>
 

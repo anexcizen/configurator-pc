@@ -59,9 +59,9 @@
         </tr>
         <c:forEach var="b" items="${builds}">
             <tr>
-                <td>${b.username}</td>
-                <td>${b.title}</td>
-                <td>${b.description}</td>
+                <td><c:out value="${b.username}"/></td>
+                <td><c:out value="${b.title}"/></td>
+                <td><c:out value="${b.description}"/></td>
                 <td>
                     <c:choose>
                         <c:when test="${b.pub}">Да</c:when>

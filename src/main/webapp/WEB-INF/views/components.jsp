@@ -18,7 +18,7 @@
             <c:forEach var="cat" items="${categories}">
                 <option value="${cat.id}"
                         <c:if test="${cat.id == selectedCategoryId}">selected</c:if>>
-                        ${cat.name}
+                        <c:out value="${cat.name}"/>
                 </option>
             </c:forEach>
         </select>
@@ -48,24 +48,24 @@
                 <c:choose>
                     <c:when test="${not empty comp.imagePath}">
                         <img src="${pageContext.request.contextPath}/img/components/${comp.imagePath}"
-                             alt="${comp.name}" width="60" height="60" style="object-fit: contain;">
+                             alt="<c:out value='${comp.name}'/>" width="60" height="60" style="object-fit: contain;">
                     </c:when>
                     <c:otherwise>
                         <span style="color: #666; font-size: 12px;">Нет фото</span>
                    </c:otherwise>
                 </c:choose>
             </td>
-            <td>${comp.name}</td>
+            <td><c:out value="${comp.name}"/></td>
             <td>
                 <c:forEach var="cat" items="${categories}">
                     <c:if test="${cat.id == comp.categoryId}">
-                        ${cat.name}
+                        <c:out value="${cat.name}"/>
                     </c:if>
                 </c:forEach>
             </td>
             <td><my:price value="${comp.price}"/></td>
-            <td>${comp.socket}</td>
-            <td>${comp.ramType}</td>
+            <td><c:out value="${comp.socket}"/></td>
+            <td><c:out value="${comp.ramType}"/></td>
             <td>${comp.powerWatts}</td>
             <c:if test="${sessionScope.currentUser.role == 'ADMIN'}">
                 <td>

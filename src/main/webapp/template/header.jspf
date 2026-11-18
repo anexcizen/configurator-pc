@@ -1,13 +1,12 @@
 <%@ page pageEncoding="UTF-8" contentType="text/html;charset=UTF-8" language="java" %>
-<%@ page contentType="text/html;charset=UTF-8" language="java" %>
 <%@ taglib prefix="c" uri="jakarta.tags.core" %>
-<script src="${pageContext.request.contextPath}/template/script.js" defer></script>
 <!DOCTYPE html>
 <html lang="ru">
 <head>
     <meta charset="UTF-8">
     <title>PC Configurator</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/template/style.css">
+    <script src="${pageContext.request.contextPath}/template/script.js" defer></script>
 </head>
 <body>
 
@@ -18,7 +17,7 @@
             <a href="${pageContext.request.contextPath}/components">Комплектующие</a>
             <a href="${pageContext.request.contextPath}/builds">Сборки</a>
             <c:if test="${not empty sessionScope.currentUser}">
-                <a href="${pageContext.request.contextPath}/logout">Выйти из аккаунта (${sessionScope.currentUser.username})</a>
+                <a href="${pageContext.request.contextPath}/logout">Выйти из аккаунта (<c:out value="${sessionScope.currentUser.username}"/>)</a>
             </c:if>
         </nav>
     </div>
@@ -27,7 +26,7 @@
 <main class="container">
     <c:if test="${not empty sessionScope.error}">
         <div class="alert alert-danger">
-            ${sessionScope.error}
+            <c:out value="${sessionScope.error}"/>
             <c:remove var="error" scope="session"/>
         </div>
     </c:if>
