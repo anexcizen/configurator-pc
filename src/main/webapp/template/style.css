@@ -456,3 +456,143 @@ form.category-add-form .component-select {
     border-color: #ff6b81;
     color: #ff6b81;
 }
+
+.configurator-wrapper {
+    display: grid;
+    grid-template-columns: 400px 1fr;
+    gap: 28px;
+    align-items: start;
+    margin-bottom: 30px;
+}
+
+@media (max-width: 900px) {
+    .configurator-wrapper {
+        grid-template-columns: 1fr;
+    }
+}
+
+.pc-scene-panel {
+    position: sticky;
+    top: 20px;
+    background: #131936;
+    border: 1px solid #222c56;
+    border-top: 4px solid #5ce1e6;
+    border-radius: 14px;
+    padding: 20px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.35);
+}
+
+.pc-scene {
+    position: relative;
+    width: 100%;
+    height: 400px;
+    background-color: #0c1023;
+    background-image: radial-gradient(#1e274d 1px, transparent 1px);
+    background-size: 16px 16px;
+    border: 1px dashed #2d3a6e;
+    border-radius: 10px;
+    overflow: hidden;
+}
+
+.scene-empty-hint {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    color: #64748b;
+    font-size: 14px;
+    padding: 20px;
+}
+
+.scene-layer {
+    position: absolute;
+    object-fit: contain;
+    pointer-events: auto;
+    filter: drop-shadow(0 6px 12px rgba(0, 0, 0, 0.65));
+    transition: transform 0.2s ease;
+}
+
+.scene-layer:hover {
+    transform: scale(1.03);
+}
+
+.layer-case {
+    z-index: 1;
+    top: 50%;
+    left: 50%;
+    width: 170%;
+    height: 170%;
+    transform: translate(-50%, -50%);
+    object-fit: contain;
+    object-position: center;
+    filter: none;
+    pointer-events: none;
+}
+
+.layer-mb {
+    z-index: 2;
+    top: 14%;
+    left: 16%;
+    width: 55%;
+    height: 55%;
+}
+
+.layer-cpu {
+    z-index: 3;
+    top: 24%;
+    left: 34%;
+    width: 15%;
+    height: 15%;
+}
+
+.layer-psu {
+    z-index: 3;
+    bottom: 8%;
+    left: 15%;
+    width: 32%;
+    height: 20%;
+}
+
+.layer-ram {
+    z-index: 4;
+    top: 22%;
+    left: 52%;
+    width: 12%;
+    height: 20%;
+}
+.ram-slot-1 { left: 55%; }
+.ram-slot-2 { left: 58%; }
+.ram-slot-3 { left: 61%; }
+
+.layer-gpu {
+    z-index: 5;
+    top: 46%;
+    left: 18%;
+    width: 52%;
+    height: 24%;
+}
+
+.layer-other {
+    z-index: 6;
+    bottom: 10%;
+    right: 10%;
+    width: 22%;
+    height: 22%;
+}
+
+.scene-total {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: 16px;
+    padding-top: 14px;
+    border-top: 1px solid #1e274d;
+    font-size: 16px;
+}
+
+.scene-total b {
+    color: #4ade80;
+    font-size: 20px;
+}
