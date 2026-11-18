@@ -21,7 +21,7 @@ public class BuildDaoJdbc implements BuildDao {
     private static final String INSERT_COMPONENT = "INSERT INTO build_components (build_id, component_id) VALUES (?, ?)";
     private static final String COMPONENT_WHERE_BC_BUILD_ID = "SELECT c.* FROM components c JOIN build_components bc ON c.id = bc.component_id WHERE bc.build_id = ?";
     private static final String DELETE = "DELETE FROM builds WHERE id = ?";
-    private static final String DELETE_COMPONENT = "DELETE FROM build_components WHERE build_id = ? AND component_id = ?";
+    private static final String DELETE_COMPONENT = "DELETE FROM build_components WHERE ctid IN (SELECT ctid FROM build_components WHERE build_id = ? AND component_id = ? LIMIT 1)";
     private static final String UPDATE = "UPDATE builds SET title=?, description=?, is_public=? WHERE id=?";
     private static final String ALL_PUBLIC_BUILDS = "SELECT b.*, u.username FROM builds b JOIN users u ON u.id = b.user_id WHERE b.is_public = true ORDER BY b.id DESC";
 
