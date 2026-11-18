@@ -8,10 +8,16 @@ import ru.itis.oris501.configuratorpc.dao.*;
 import ru.itis.oris501.configuratorpc.dao.impl.*;
 import ru.itis.oris501.configuratorpc.service.*;
 
+import java.util.logging.Logger;
+
 @WebListener
 public class AppContextListener implements ServletContextListener {
+    private static final Logger LOGGER = Logger.getLogger(AppContextListener.class.getName());
+
     @Override
     public void contextInitialized(ServletContextEvent sce) {
+        LOGGER.info("Инициализация приложения");
+
         ServletContext ctx = sce.getServletContext();
 
         UserDao userDao = new UserDaoJdbc();
@@ -31,8 +37,12 @@ public class AppContextListener implements ServletContextListener {
         ctx.setAttribute("componentService", componentService);
         ctx.setAttribute("buildService", buildService);
         ctx.setAttribute("commentService", commentService);
+
+        LOGGER.info("Сервисы успешно инициализированы и добавлены в ServletContext");
     }
 
     @Override
-    public void contextDestroyed(ServletContextEvent sce) { }
+    public void contextDestroyed(ServletContextEvent sce) {
+        LOGGER.info("Приложение остановлено");
+    }
 }

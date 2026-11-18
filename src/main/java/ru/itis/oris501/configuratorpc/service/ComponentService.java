@@ -8,8 +8,11 @@ import ru.itis.oris501.configuratorpc.model.Component;
 import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
+import java.util.logging.Logger;
 
 public class ComponentService {
+    private static final Logger LOGGER = Logger.getLogger(ComponentService.class.getName());
+
     private final ComponentDao componentDao;
     private final CategoryDao categoryDao;
 
@@ -67,8 +70,12 @@ public class ComponentService {
         } catch (RuntimeException e) {
             if (e.getCause() instanceof java.sql.SQLException
                     && e.getCause().getMessage().contains("foreign key")) {
+                LOGGER.warning("Попытка удалить компонент id=" + id + ", который используется в сборках");
+
                 throw new IllegalArgumentException("Компонент используется в сборках, удалить нельзя. Сначала уберите его из сборок.");
             }
+
+            LOGGER.severe("Ошибка при удалении компонента id=" + id + ": " + e.getMessage());
             throw e;
         }
     }

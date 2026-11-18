@@ -7,9 +7,11 @@ import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
+import java.util.logging.Logger;
 
 @WebFilter("/*")
 public class AuthFilter implements Filter {
+    private static final Logger LOGGER = Logger.getLogger(AuthFilter.class.getName());
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
@@ -34,6 +36,8 @@ public class AuthFilter implements Filter {
         if (session != null && session.getAttribute("currentUser") != null) {
             filterChain.doFilter(req, resp);
         } else {
+            LOGGER.warning("Неавторизованный доступ к: " + path + ". Перенаправление на /login");
+
             resp.sendRedirect(req.getContextPath() + "/login");
         }
     }
