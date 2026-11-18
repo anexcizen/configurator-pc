@@ -14,10 +14,6 @@ public class ComponentService {
     private final ComponentDao componentDao;
     private final CategoryDao categoryDao;
 
-    public ComponentService() {
-        this(new ComponentDaoJdbc(), new CategoryDaoJdbc());
-    }
-
     public ComponentService(ComponentDao componentDao, CategoryDao categoryDao) {
         this.componentDao = componentDao;
         this.categoryDao = categoryDao;

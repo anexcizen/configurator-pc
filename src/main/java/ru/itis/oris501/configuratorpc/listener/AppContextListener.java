@@ -4,6 +4,8 @@ import jakarta.servlet.ServletContext;
 import jakarta.servlet.ServletContextEvent;
 import jakarta.servlet.ServletContextListener;
 import jakarta.servlet.annotation.WebListener;
+import ru.itis.oris501.configuratorpc.dao.*;
+import ru.itis.oris501.configuratorpc.dao.impl.*;
 import ru.itis.oris501.configuratorpc.service.*;
 
 @WebListener
@@ -11,11 +13,24 @@ public class AppContextListener implements ServletContextListener {
     @Override
     public void contextInitialized(ServletContextEvent sce) {
         ServletContext ctx = sce.getServletContext();
-        ctx.setAttribute("userService", new UserService());
-        ctx.setAttribute("componentService", new ComponentService());
-        ctx.setAttribute("categoryService", new CategoryService());
-        ctx.setAttribute("buildService", new BuildService((ComponentService) ctx.getAttribute("componentService"), (CategoryService) ctx.getAttribute("categoryService")));
-        ctx.setAttribute("commentService", new CommentService());
+
+        UserDao userDao = new UserDaoJdbc();
+        CategoryDao categoryDao = new CategoryDaoJdbc();
+        ComponentDao componentDao = new ComponentDaoJdbc();
+        BuildDao buildDao = new BuildDaoJdbc();
+        CommentDao commentDao = new CommentDaoJdbc();
+
+        UserService userService = new UserService(userDao);
+        CategoryService categoryService = new CategoryService(categoryDao);
+        ComponentService componentService = new ComponentService(componentDao, categoryDao);
+        BuildService buildService = new BuildService(buildDao, componentService, categoryService);
+        CommentService commentService = new CommentService(commentDao);
+
+        ctx.setAttribute("userService", userService);
+        ctx.setAttribute("categoryService", categoryService);
+        ctx.setAttribute("componentService", componentService);
+        ctx.setAttribute("buildService", buildService);
+        ctx.setAttribute("commentService", commentService);
     }
 
     @Override

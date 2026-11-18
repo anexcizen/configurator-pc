@@ -144,6 +144,9 @@ public class BuildServlet extends HttpServlet {
 
                 buildService.removeComponent(buildId, componentId, user.getId());
                 resp.sendRedirect(req.getContextPath() + "/builds?id=" + buildId);
+            } catch (IllegalArgumentException e) {
+                req.getSession().setAttribute("error", e.getMessage());
+                resp.sendRedirect(req.getContextPath() + "/builds?id=" + req.getParameter("id"));
             } catch (SecurityException e) {
                 resp.sendError(403, "Доступ запрещён");
             }

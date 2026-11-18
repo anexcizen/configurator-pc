@@ -1,17 +1,12 @@
 package ru.itis.oris501.configuratorpc.service;
 
 import ru.itis.oris501.configuratorpc.dao.CommentDao;
-import ru.itis.oris501.configuratorpc.dao.impl.CommentDaoJdbc;
 import ru.itis.oris501.configuratorpc.model.Comment;
 
 import java.util.List;
 
 public class CommentService {
     private final CommentDao commentDao;
-
-    public CommentService() {
-        this(new CommentDaoJdbc());
-    }
 
     public CommentService(CommentDao commentDao) {
         this.commentDao = commentDao;

@@ -1,7 +1,6 @@
 package ru.itis.oris501.configuratorpc.service;
 
 import ru.itis.oris501.configuratorpc.dao.BuildDao;
-import ru.itis.oris501.configuratorpc.dao.impl.BuildDaoJdbc;
 import ru.itis.oris501.configuratorpc.model.Build;
 import ru.itis.oris501.configuratorpc.model.Component;
 import ru.itis.oris501.configuratorpc.model.User;
@@ -13,14 +12,6 @@ public class BuildService {
     private final BuildDao buildDao;
     private final ComponentService componentService;
     private final CategoryService categoryService;
-
-    public BuildService() {
-        this(new BuildDaoJdbc(), new ComponentService(), new CategoryService());
-    }
-
-    public BuildService(ComponentService componentService, CategoryService categoryService) {
-        this(new BuildDaoJdbc(), componentService, categoryService);
-    }
 
     public BuildService(BuildDao buildDao, ComponentService componentService, CategoryService categoryService) {
         this.buildDao = buildDao;
@@ -94,59 +85,102 @@ public class BuildService {
     public void checkCompatibility(int buildId, Component newComp) {
         List<Component> existing = getComponents(buildId);
 
-        Component mathBBoard = null;
+        Component motherboard = null;
         Component cpu = null;
-        Component ram = null;
         Component powerSupply = null;
-        int currentPower = 0;
+
+        List<Component> ramModules = new java.util.ArrayList<>();
+
+        long currentPower = 0;
 
         for (Component c : existing) {
-            String catName = categoryService.findById(c.getCategoryId()).get().getName();
-            if ("Материнская плата".equals(catName)) mathBBoard = c;
-            if ("Процессор".equals(catName)) cpu = c;
-            if ("Оперативная память".equals(catName)) ram = c;
-            if ("Блок питания".equals(catName)) {
+
+            String categoryName = categoryService.findById(c.getCategoryId()).orElseThrow(() ->
+                    new IllegalArgumentException("Категория компонента не найдена")).getName();
+
+            if ("Материнская плата".equals(categoryName)) {
+                motherboard = c;
+            }
+
+            if ("Процессор".equals(categoryName)) {
+                cpu = c;
+            }
+
+            if ("Оперативная память".equals(categoryName)) {
+                ramModules.add(c);
+            }
+
+            if ("Блок питания".equals(categoryName)) {
                 powerSupply = c;
                 continue;
             }
-            if (c.getPowerWatts() != null) currentPower += c.getPowerWatts();
-        }
 
-        String newCatName = categoryService.findById(newComp.getCategoryId()).get().getName();
-
-
-
-        if (("Процессор".equals(newCatName)) && mathBBoard != null) {
-            if (newComp.getSocket() != null && mathBBoard.getSocket() != null && !newComp.getSocket().equals(mathBBoard.getSocket())) {
-                throw new IllegalArgumentException("Несовместимый сокет: у CPU " + newComp.getSocket() + ", а у материнской платы " + mathBBoard.getSocket());
+            if (c.getPowerWatts() != null) {
+                currentPower += c.getPowerWatts();
             }
         }
 
-        if (("Материнская плата".equals(newCatName)) && cpu != null) {
+        String newCategoryName = categoryService.findById(newComp.getCategoryId())
+                .orElseThrow(() -> new IllegalArgumentException("Категория нового компонента не найдена")).getName();
+
+
+        if ("Процессор".equals(newCategoryName) && motherboard != null) {
+            if (newComp.getSocket() != null && motherboard.getSocket() != null && !newComp.getSocket().equals(motherboard.getSocket())) {
+                throw new IllegalArgumentException("Несовместимый сокет: у CPU " + newComp.getSocket() + ", а у материнской платы " + motherboard.getSocket());
+            }
+        }
+
+        if ("Материнская плата".equals(newCategoryName) && cpu != null) {
             if (newComp.getSocket() != null && cpu.getSocket() != null && !newComp.getSocket().equals(cpu.getSocket())) {
-                throw new IllegalArgumentException("Несовместимый сокет: у CPU " + cpu.getSocket() + ", а у материнской платы " + newComp.getSocket());
+                throw new IllegalArgumentException(
+                        "Несовместимый сокет: у CPU " + cpu.getSocket() + ", а у материнской платы " + newComp.getSocket()
+                );
             }
         }
 
-        if (("Оперативная память".equals(newCatName)) && mathBBoard != null) {
-            if (newComp.getRamType() != null && mathBBoard.getRamType() != null && !newComp.getRamType().equals(mathBBoard.getRamType())) {
-                throw new IllegalArgumentException("Несовместимый тип памяти: у RAM " + newComp.getRamType() + ", а у материнки " + mathBBoard.getRamType());
+        if ("Оперативная память".equals(newCategoryName) && motherboard != null) {
+            if (newComp.getRamType() != null && motherboard.getRamType() != null && !newComp.getRamType().equals(motherboard.getRamType())) {
+                throw new IllegalArgumentException(
+                        "Несовместимый тип памяти: у RAM " + newComp.getRamType()+ ", а у материнской платы " + motherboard.getRamType()
+                );
             }
         }
 
-        if (("Материнская плата".equals(newCatName)) && ram != null) {
-            if (newComp.getRamType() != null && ram.getRamType() != null && !newComp.getRamType().equals(ram.getRamType())) {
-                throw new IllegalArgumentException("Несовместимый тип памяти: у RAM " + ram.getRamType() + ", а у материнки " + newComp.getRamType());
+        if ("Материнская плата".equals(newCategoryName)) {
+            for (Component ram : ramModules) {
+                if (newComp.getRamType() != null && ram.getRamType() != null && !newComp.getRamType().equals(ram.getRamType())) {
+
+                    throw new IllegalArgumentException(
+                            "Несовместимый тип памяти: у RAM "+ ram.getRamType()+ ", а у материнской платы "+ newComp.getRamType()
+                    );
+                }
             }
         }
 
-        if (powerSupply != null && newComp.getPowerWatts() != null) {
-            int totalPower = currentPower + newComp.getPowerWatts();
+        if ("Блок питания".equals(newCategoryName)) {
+            if (newComp.getPowerWatts() == null) {
+                throw new IllegalArgumentException("Не указана мощность блока питания");
+            }
+
+            if (currentPower > newComp.getPowerWatts()) {
+
+                throw new IllegalArgumentException("Не хватает мощности БП! Нужно " + currentPower + " Вт, а выбранный БП на " + newComp.getPowerWatts() + " Вт");
+            }
+        }
+
+        else if (powerSupply != null) {
+            if (powerSupply.getPowerWatts() == null) {
+                throw new IllegalArgumentException("У установленного блока питания не указана мощность");
+            }
+
+            long addedPower = newComp.getPowerWatts() != null ? newComp.getPowerWatts() : 0;
+            long totalPower = currentPower + addedPower;
+
             if (totalPower > powerSupply.getPowerWatts()) {
-                throw new IllegalArgumentException("Не хватает мощности БП! Нужно " + totalPower + " Вт, а БП на " + powerSupply.getPowerWatts() + " Вт.");
+
+                throw new IllegalArgumentException("Не хватает мощности БП! Нужно "+ totalPower + " Вт, а БП на " + powerSupply.getPowerWatts() + " Вт");
             }
         }
-
     }
 
     public void delete(int id, int userId) {
