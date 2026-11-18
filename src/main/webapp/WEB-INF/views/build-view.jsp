@@ -41,6 +41,7 @@
 </c:if>
 
 <h2>Компоненты в сборке</h2>
+<p><b>Итого:</b> <my:price value="${totalPrice}"/></p>
 
 <c:if test="${empty buildComponents}">
     <p>В сборке пока нет компонентов.</p>

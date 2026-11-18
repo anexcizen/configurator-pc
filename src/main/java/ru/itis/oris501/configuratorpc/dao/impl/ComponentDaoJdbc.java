@@ -65,7 +65,7 @@ public class ComponentDaoJdbc implements ComponentDao {
     public Component save(Component component) {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(INSERT)) {
-            PasteIntoPreparedStatement(component, ps);
+            pasteIntoPreparedStatement(component, ps);
 
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) component.setId(rs.getInt("id"));
@@ -80,7 +80,7 @@ public class ComponentDaoJdbc implements ComponentDao {
     public void update(Component component) {
         try (Connection conn = DBConnection.getConnection();
              PreparedStatement ps = conn.prepareStatement(UPDATE)) {
-            PasteIntoPreparedStatement(component, ps);
+            pasteIntoPreparedStatement(component, ps);
             ps.setInt(8, component.getId());
             ps.executeUpdate();
         } catch (SQLException e) {
@@ -88,7 +88,7 @@ public class ComponentDaoJdbc implements ComponentDao {
         }
     }
 
-    private static void PasteIntoPreparedStatement(Component c, PreparedStatement ps) throws SQLException {
+    private static void pasteIntoPreparedStatement(Component c, PreparedStatement ps) throws SQLException {
         ps.setString(1, c.getName());
         ps.setInt(2, c.getCategoryId());
         ps.setBigDecimal(3, c.getPrice());

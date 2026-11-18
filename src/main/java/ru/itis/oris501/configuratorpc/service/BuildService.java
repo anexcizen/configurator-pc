@@ -94,7 +94,7 @@ public class BuildService {
     public void checkCompatibility(int buildId, Component newComp) {
         List<Component> existing = getComponents(buildId);
 
-        Component mathPlate = null;
+        Component mathBBoard = null;
         Component cpu = null;
         Component ram = null;
         Component powerSupply = null;
@@ -102,7 +102,7 @@ public class BuildService {
 
         for (Component c : existing) {
             String catName = categoryService.findById(c.getCategoryId()).get().getName();
-            if ("Материнская плата".equals(catName)) mathPlate = c;
+            if ("Материнская плата".equals(catName)) mathBBoard = c;
             if ("Процессор".equals(catName)) cpu = c;
             if ("Оперативная память".equals(catName)) ram = c;
             if ("Блок питания".equals(catName)) {
@@ -116,9 +116,9 @@ public class BuildService {
 
 
 
-        if (("Процессор".equals(newCatName)) && mathPlate != null) {
-            if (newComp.getSocket() != null && mathPlate.getSocket() != null && !newComp.getSocket().equals(mathPlate.getSocket())) {
-                throw new IllegalArgumentException("Несовместимый сокет: у CPU " + newComp.getSocket() + ", а у материнской платы " + mathPlate.getSocket());
+        if (("Процессор".equals(newCatName)) && mathBBoard != null) {
+            if (newComp.getSocket() != null && mathBBoard.getSocket() != null && !newComp.getSocket().equals(mathBBoard.getSocket())) {
+                throw new IllegalArgumentException("Несовместимый сокет: у CPU " + newComp.getSocket() + ", а у материнской платы " + mathBBoard.getSocket());
             }
         }
 
@@ -128,9 +128,9 @@ public class BuildService {
             }
         }
 
-        if (("Оперативная память".equals(newCatName)) && mathPlate != null) {
-            if (newComp.getRamType() != null && mathPlate.getRamType() != null && !newComp.getRamType().equals(mathPlate.getRamType())) {
-                throw new IllegalArgumentException("Несовместимый тип памяти: у RAM " + newComp.getRamType() + ", а у материнки " + mathPlate.getRamType());
+        if (("Оперативная память".equals(newCatName)) && mathBBoard != null) {
+            if (newComp.getRamType() != null && mathBBoard.getRamType() != null && !newComp.getRamType().equals(mathBBoard.getRamType())) {
+                throw new IllegalArgumentException("Несовместимый тип памяти: у RAM " + newComp.getRamType() + ", а у материнки " + mathBBoard.getRamType());
             }
         }
 

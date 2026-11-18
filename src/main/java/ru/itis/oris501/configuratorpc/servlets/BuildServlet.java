@@ -16,6 +16,7 @@ import ru.itis.oris501.configuratorpc.service.CommentService;
 import ru.itis.oris501.configuratorpc.service.ComponentService;
 
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.util.*;
 
 @WebServlet("/builds")
@@ -51,8 +52,18 @@ public class BuildServlet extends HttpServlet {
                 try {
                     Build build = buildService.getBuildForUser(buildId, user);
                     req.setAttribute("build", build);
+
                     List<Component> buildComps = buildService.getComponents(buildId);
                     req.setAttribute("buildComponents", buildComps);
+
+                    BigDecimal total = BigDecimal.ZERO;
+                    for (Component c : buildComps) {
+                        if (c.getPrice() != null) {
+                            total = total.add(c.getPrice());
+                        }
+                    }
+                    req.setAttribute("totalPrice", total);
+
                     req.setAttribute("allComponents", componentService.findAll());
 
                     Map<String, List<Component>> grouped = new LinkedHashMap<>();
